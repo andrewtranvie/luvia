@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import ShopClient from "./ShopClient";
 import { MOODS, FAMILIES, type Mood, type ScentFamily } from "@/lib/products";
 
 export const metadata: Metadata = { title: "Cửa hàng nến thơm" };
 
-export default async function ShopPage({ searchParams }: PageProps<"/san-pham">) {
+// Đọc bộ lọc từ URL (?mood=…&family=…) — phải nằm trong <Suspense> vì cacheComponents
+async function ShopWithFilters({ searchParams }: { searchParams: PageProps<"/san-pham">["searchParams"] }) {
   const sp = await searchParams;
   const mood = typeof sp.mood === "string" && sp.mood in MOODS ? (sp.mood as Mood) : null;
   const family = typeof sp.family === "string" && sp.family in FAMILIES ? (sp.family as ScentFamily) : null;
+  return <ShopClient key={`${mood}-${family}`} initialMood={mood} initialFamily={family} />;
+}
+
+export default function ShopPage({ searchParams }: PageProps<"/san-pham">) {
   return (
     <>
       <section className="paper border-b border-leaf/10">
@@ -20,7 +26,9 @@ export default async function ShopPage({ searchParams }: PageProps<"/san-pham">)
           </p>
         </div>
       </section>
-      <ShopClient key={`${mood}-${family}`} initialMood={mood} initialFamily={family} />
+      <Suspense fallback={<ShopClient initialMood={null} initialFamily={null} />}>
+        <ShopWithFilters searchParams={searchParams} />
+      </Suspense>
     </>
   );
 }

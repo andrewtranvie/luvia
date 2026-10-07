@@ -81,7 +81,10 @@ export default function CheckoutPage() {
       total,
       customer: form,
       payment: PAYMENTS.find((p) => p.id === payment)!.label,
+      paymentMethod: payment as Order["paymentMethod"],
+      coupon,
       oilReturn,
+      giftWrap: gift,
     };
     try {
       localStorage.setItem("luvia-last-order", JSON.stringify(order));

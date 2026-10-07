@@ -1,6 +1,5 @@
 import { catalogForAI, PRODUCTS } from "@/lib/products";
 
-export const runtime = "nodejs";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
