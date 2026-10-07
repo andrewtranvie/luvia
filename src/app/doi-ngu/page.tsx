@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -18,12 +20,6 @@ import {
   Users,
 } from "lucide-react";
 import { SectionTitle } from "@/components/ui";
-
-export const metadata = {
-  title: "Đội ngũ & Hồ sơ năng lực Bên B",
-  description:
-    "Hồ sơ năng lực dự án Luvia — Nhóm bạn trẻ sinh viên khởi nghiệp xanh, chuyên sản xuất nến thơm từ dầu ăn tái chế và cung cấp giải pháp quà tặng doanh nghiệp bền vững.",
-};
 
 const TEAM_MEMBERS = [
   {

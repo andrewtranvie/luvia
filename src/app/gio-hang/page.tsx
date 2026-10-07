@@ -384,6 +384,15 @@ export default function CartPage() {
             >
               Xác nhận đặt hàng ({formatVND(finalTotal)})
             </button>
+
+            <a
+              href="https://zalo.me/0988123456"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 block w-full rounded-full border-2 border-leaf bg-white py-3 text-center text-xs font-bold text-leaf hover:bg-cream transition"
+            >
+              💬 Hoặc Nhắn Zalo Đặt Hàng Nhanh (0988 123 456)
+            </a>
           </div>
         </form>
       </div>

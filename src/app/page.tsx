@@ -59,17 +59,22 @@ export default function Home() {
     <>
       {/* HERO */}
       <section className="relative overflow-hidden">
+        {/* Hạt ánh sáng đom đóm / ngọn lửa bay bổng */}
         <div className="pointer-events-none absolute -right-40 -top-40 size-[520px] rounded-full bg-flame-soft/70 blur-3xl" />
         <div className="pointer-events-none absolute -left-32 bottom-0 size-[380px] rounded-full bg-leaf-soft blur-3xl" />
+        <div className="pointer-events-none absolute left-1/4 top-1/3 size-3 rounded-full bg-flame/80 blur-xs animate-firefly" />
+        <div className="pointer-events-none absolute right-1/3 top-1/4 size-4 rounded-full bg-flame/60 blur-xs animate-firefly [animation-delay:2s]" />
+        <div className="pointer-events-none absolute left-1/3 bottom-1/4 size-2.5 rounded-full bg-leaf/70 blur-xs animate-firefly [animation-delay:4s]" />
+
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-16">
           <div className="animate-fade-up">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-sm font-medium text-leaf shadow-sm ring-1 ring-leaf/15">
-              <Recycle className="size-4" /> 100% từ dầu ăn tái chế & sáp thực vật
+            <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-sm font-medium text-leaf shadow-sm ring-1 ring-leaf/15 hover:scale-105 transition">
+              <Recycle className="size-4 animate-spin-slow" /> 100% từ dầu ăn tái chế & sáp thực vật
             </span>
             <h1 className="mt-6 text-4xl font-extrabold leading-[1.1] text-ink sm:text-5xl lg:text-6xl">
               Lan tỏa <span className="squiggle text-leaf">ánh sáng xanh</span>
               <br />
-              cùng <span className="font-hand text-[1.15em] font-normal text-flame-dark">Luvia</span> ♡
+              cùng <span className="font-hand text-[1.15em] font-normal text-flame-dark inline-block hover:rotate-3 transition duration-300">Luvia</span> ♡
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
               Mỗi ngọn nến thơm Luvia được tái sinh từ dầu ăn đã qua sử dụng — sạch mùi, cháy êm, thơm dịu. Thắp lên
@@ -78,11 +83,11 @@ export default function Home() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/san-pham"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-leaf px-7 py-3.5 font-semibold text-white shadow-lg shadow-leaf/25 transition hover:bg-leaf-dark"
+                className="btn-shine inline-flex items-center justify-center gap-2 rounded-full bg-leaf px-8 py-4 font-bold text-white shadow-lg shadow-leaf/25 glow-leaf transition hover:bg-leaf-dark hover:scale-105 active:scale-95"
               >
                 Mua nến ngay <ArrowRight className="size-4" />
               </Link>
-              <AskLuviaButton prompt="Chào Luvia! Mình mới tìm hiểu nến thơm, bạn tư vấn giúp mình với.">
+              <AskLuviaButton prompt="Chào Luvia! Mình mới tìm hiểu nến thơm, bạn tư vấn giúp mình với." className="hover:scale-105 active:scale-95 transition">
                 Chưa biết chọn mùi? Hỏi Luvia
               </AskLuviaButton>
             </div>
@@ -92,9 +97,9 @@ export default function Home() {
                 ["15.000+", "ngọn nến đã thắp sáng"],
                 ["4.9★", "điểm đánh giá trung bình"],
               ].map(([n, l]) => (
-                <div key={l}>
+                <div key={l} className="group rounded-2xl p-2 transition hover:bg-white/60">
                   <dt className="sr-only">{l}</dt>
-                  <dd className="text-2xl font-extrabold text-leaf-dark sm:text-3xl">{n}</dd>
+                  <dd className="text-2xl font-extrabold text-leaf-dark sm:text-3xl transition group-hover:scale-105">{n}</dd>
                   <dd className="mt-1 text-xs leading-snug text-ink-soft sm:text-sm">{l}</dd>
                 </div>
               ))}
@@ -102,23 +107,23 @@ export default function Home() {
           </div>
 
           <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[48%_52%_44%_56%/50%_42%_58%_50%] shadow-2xl shadow-leaf/20 ring-8 ring-white">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[48%_52%_44%_56%/50%_42%_58%_50%] shadow-2xl shadow-leaf/20 ring-8 ring-white animate-float-slow animate-pulse-glow">
               <Image
                 src="/brand/mascot-main.jpg"
                 alt="Linh vật Luvia — ngọn nến nhỏ ôm trái đất"
                 fill
                 priority
                 sizes="(min-width: 1024px) 45vw, 90vw"
-                className="object-cover"
+                className="object-cover transition duration-700 hover:scale-105"
               />
             </div>
-            <div className="absolute -left-4 top-10 animate-float rounded-2xl bg-white px-4 py-3 shadow-lg ring-1 ring-leaf/10 sm:-left-8">
+            <div className="absolute -left-4 top-10 animate-float rounded-2xl bg-white px-4 py-3 shadow-lg ring-1 ring-leaf/10 sm:-left-8 hover:scale-110 transition">
               <p className="font-hand text-lg leading-tight text-leaf">Sống xanh</p>
               <p className="text-xs text-ink-soft">mỗi ngày 🌿</p>
             </div>
-            <div className="absolute -right-2 bottom-12 animate-float rounded-2xl bg-white px-4 py-3 shadow-lg ring-1 ring-leaf/10 [animation-delay:1.5s] sm:-right-6">
+            <div className="absolute -right-2 bottom-12 animate-float rounded-2xl bg-white px-4 py-3 shadow-lg ring-1 ring-leaf/10 [animation-delay:1.5s] sm:-right-6 hover:scale-110 transition">
               <p className="flex items-center gap-1 text-sm font-bold text-ink">
-                <Star className="size-4 fill-flame text-flame" /> 4.9/5
+                <Star className="size-4 fill-flame text-flame animate-pulse" /> 4.9/5
               </p>
               <p className="text-xs text-ink-soft">1.500+ đánh giá</p>
             </div>
@@ -167,21 +172,26 @@ export default function Home() {
           />
           <ol className="mt-14 grid gap-6 md:grid-cols-3">
             {STEPS.map((s, i) => (
-              <li key={s.title} className="relative rounded-[28px] bg-white p-8 text-center shadow-sm ring-1 ring-leaf/10">
-                <span className="absolute left-6 top-5 font-hand text-4xl text-flame/50">0{i + 1}</span>
-                <div className="mx-auto grid size-20 place-items-center rounded-full bg-leaf-soft text-leaf">
+              <li
+                key={s.title}
+                className="group relative rounded-[28px] bg-white p-8 text-center ring-1 ring-leaf/10 card-interactive"
+              >
+                <span className="absolute left-6 top-5 font-hand text-4xl text-flame/50 transition group-hover:scale-110 group-hover:text-flame">
+                  0{i + 1}
+                </span>
+                <div className="mx-auto grid size-20 place-items-center rounded-full bg-leaf-soft text-leaf transition duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:bg-leaf group-hover:text-white">
                   <s.icon className="size-9" strokeWidth={1.6} />
                 </div>
-                <h3 className="mt-5 text-xl font-bold">{s.title}</h3>
+                <h3 className="mt-5 text-xl font-bold transition group-hover:text-leaf">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-soft">{s.desc}</p>
                 {i < STEPS.length - 1 && (
-                  <ArrowRight className="absolute -right-5 top-1/2 z-10 hidden size-8 -translate-y-1/2 rounded-full bg-flame p-1.5 text-white md:block" />
+                  <ArrowRight className="absolute -right-5 top-1/2 z-10 hidden size-8 -translate-y-1/2 rounded-full bg-flame p-1.5 text-white md:block animate-pulse" />
                 )}
               </li>
             ))}
           </ol>
           <div className="mt-10 text-center">
-            <Link href="/cau-chuyen#quy-trinh" className="inline-flex items-center gap-2 font-semibold text-leaf hover:text-flame-dark">
+            <Link href="/cau-chuyen#quy-trinh" className="inline-flex items-center gap-2 font-semibold text-leaf hover:text-flame-dark hover:translate-x-1 transition">
               Tìm hiểu quy trình chi tiết <ArrowRight className="size-4" />
             </Link>
           </div>
@@ -196,9 +206,9 @@ export default function Home() {
             <Link
               key={m}
               href={`/san-pham?mood=${m}`}
-              className="group rounded-3xl bg-white p-5 text-center ring-1 ring-leaf/10 transition hover:-translate-y-1 hover:bg-leaf hover:text-white"
+              className="group rounded-3xl bg-white p-5 text-center ring-1 ring-leaf/10 card-interactive transition hover:bg-leaf hover:text-white"
             >
-              <span className="text-4xl">{MOODS[m].emoji}</span>
+              <span className="inline-block text-4xl transition duration-300 group-hover:scale-125 group-hover:-rotate-6">{MOODS[m].emoji}</span>
               <p className="mt-3 font-bold">{MOODS[m].label}</p>
               <p className="mt-1 text-xs text-ink-soft group-hover:text-white/80">{MOODS[m].desc}</p>
             </Link>
@@ -245,6 +255,47 @@ export default function Home() {
                   + {n}
                 </span>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TỰ THIẾT KẾ NẾN */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+        <div className="rounded-[40px] bg-cream-light p-8 ring-1 ring-leaf/15 sm:p-12">
+          <div className="grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+            <div>
+              <span className="brush-tag text-base">Mới: Quà tặng độc bản</span>
+              <h2 className="mt-3 text-3xl font-extrabold text-ink sm:text-4xl">
+                Tự tay chọn mùi & in tên người nhận lên nhãn nến
+              </h2>
+              <p className="mt-4 text-base leading-relaxed text-ink-soft">
+                Biến ngọn nến thơm thành món quà vô giá: Bạn chỉ cần chọn mùi hương nền, gõ lời chúc yêu thương (VD: <i>“Dành tặng mẹ yêu”</i>, <i>“Chúc mừng sinh nhật Lan”</i>), Luvia sẽ in riêng tem nhãn thủ công và đóng hộp quà trang trọng.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-4">
+                <Link
+                  href="/tu-thiet-ke"
+                  className="inline-flex items-center gap-2 rounded-full bg-leaf px-7 py-3.5 font-bold text-white shadow-md hover:bg-leaf-dark"
+                >
+                  Bắt đầu tự thiết kế <ArrowRight className="size-4" />
+                </Link>
+                <Link
+                  href="/quan-tri"
+                  className="inline-flex items-center gap-2 rounded-full border-2 border-leaf bg-white px-6 py-3.5 font-bold text-leaf hover:bg-cream"
+                >
+                  Thêm nến mới vào kho
+                </Link>
+              </div>
+            </div>
+
+            <div className="rounded-3xl bg-white p-6 shadow-md ring-1 ring-leaf/10 text-center">
+              <span className="font-hand text-xl text-leaf-dark">Góc bình yên của Mai ♡</span>
+              <p className="mt-1 text-xs text-ink-soft">“Mong em luôn an yên và mỉm cười mỗi ngày”</p>
+              <div className="mt-4 flex items-center justify-center gap-2 text-xs font-bold text-flame-dark">
+                <span>✦ Bấc Gỗ Sồi tí tách</span>
+                <span>✦ Hũ nến 200g</span>
+                <span>✦ In nhãn theo yêu cầu</span>
+              </div>
             </div>
           </div>
         </div>
@@ -384,19 +435,15 @@ export default function Home() {
       {/* STICKERS + ĐỔI DẦU */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="grid grid-cols-2 gap-4">
-            {STICKERS.map((s, i) => (
-              <Image
-                key={s.src}
-                src={s.src}
-                alt={s.alt}
-                width={285}
-                height={215}
-                className={`w-full rounded-3xl object-cover shadow-md ring-4 ring-white transition hover:rotate-0 hover:scale-105 ${
-                  i % 2 ? "rotate-2" : "-rotate-2"
-                }`}
-              />
-            ))}
+          <div className="relative overflow-hidden rounded-[36px] bg-white p-3 shadow-xl ring-1 ring-leaf/10 card-interactive">
+            <Image
+              src="/brand/stickers-set-hd.jpg"
+              alt="Bộ sticker truyền thông Luvia siêu nét"
+              width={700}
+              height={525}
+              className="w-full rounded-[28px] object-cover transition duration-500 hover:scale-[1.02]"
+              priority
+            />
           </div>
           <div id="doi-dau">
             <SectionTitle

@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import { AskLuviaButton } from "@/components/ui";
-import { FAMILIES, MOODS, PRODUCTS, type Mood, type ScentFamily } from "@/lib/products";
+import { FAMILIES, MOODS, getAllProducts, type Mood, type ScentFamily } from "@/lib/products";
 
 type Sort = "popular" | "price-asc" | "price-desc" | "rating";
 
@@ -21,10 +21,18 @@ export default function ShopClient({
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<Sort>("popular");
   const [showFilters, setShowFilters] = useState(false);
+  const [products, setProducts] = useState(getAllProducts());
+
+  useEffect(() => {
+    setProducts(getAllProducts());
+    const onUpdate = () => setProducts(getAllProducts());
+    window.addEventListener("luvia:products-updated", onUpdate);
+    return () => window.removeEventListener("luvia:products-updated", onUpdate);
+  }, []);
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const r = PRODUCTS.filter(
+    const r = products.filter(
       (p) =>
         (!mood || p.moods.includes(mood)) &&
         (!family || p.families.includes(family)) &&

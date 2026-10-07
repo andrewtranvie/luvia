@@ -57,7 +57,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-white/10 py-5 text-center text-xs text-white/60">
-        © {new Date().getFullYear()} Luvia. Không chỉ là một ngọn nến — mà là hành trình vì một tương lai xanh hơn.
+        © 2026 Luvia. Không chỉ là một ngọn nến — mà là hành trình vì một tương lai xanh hơn.
       </div>
     </footer>
   );

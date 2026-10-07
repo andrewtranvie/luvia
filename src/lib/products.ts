@@ -200,8 +200,48 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
+const CUSTOM_STORAGE_KEY = "luvia-custom-products";
+
+export function getCustomProducts(): Product[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(CUSTOM_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveCustomProduct(product: Product) {
+  if (typeof window === "undefined") return;
+  try {
+    const list = getCustomProducts().filter((p) => p.slug !== product.slug);
+    list.unshift(product);
+    localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(list));
+    window.dispatchEvent(new Event("luvia:products-updated"));
+  } catch {}
+}
+
+export function deleteCustomProduct(slug: string) {
+  if (typeof window === "undefined") return;
+  try {
+    const list = getCustomProducts().filter((p) => p.slug !== slug);
+    localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(list));
+    window.dispatchEvent(new Event("luvia:products-updated"));
+  } catch {}
+}
+
+export function getAllProducts(): Product[] {
+  if (typeof window === "undefined") return PRODUCTS;
+  const custom = getCustomProducts();
+  const customSlugs = new Set(custom.map((c) => c.slug));
+  const base = PRODUCTS.filter((p) => !customSlugs.has(p.slug));
+  return [...custom, ...base];
+}
+
 export function getProduct(slug: string) {
-  return PRODUCTS.find((p) => p.slug === slug);
+  const all = typeof window !== "undefined" ? getAllProducts() : PRODUCTS;
+  return all.find((p) => p.slug === slug) ?? PRODUCTS.find((p) => p.slug === slug);
 }
 
 export const formatVND = (n: number) =>
@@ -209,7 +249,8 @@ export const formatVND = (n: number) =>
 
 /** Tóm tắt danh mục cho AI tư vấn */
 export function catalogForAI() {
-  return PRODUCTS.map(
+  const all = typeof window !== "undefined" ? getAllProducts() : PRODUCTS;
+  return all.map(
     (p) =>
       `- [[${p.slug}]] ${p.name} — ${formatVND(p.price)} (Classic 200g; Mini 100g ${formatVND(
         priceFor(p, "mini"),

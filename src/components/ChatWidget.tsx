@@ -52,22 +52,38 @@ export default function ChatWidget() {
         </div>
       )}
 
-      <div className="fixed bottom-5 right-5 z-50 flex items-end gap-3 sm:bottom-6 sm:right-6">
-        {hint && !open && (
+      <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2 sm:bottom-6 sm:right-6">
+        {!open && (
           <button
             onClick={() => setOpen(true)}
-            className="mb-3 hidden max-w-[220px] rounded-2xl rounded-br-sm bg-white px-4 py-2.5 text-left text-sm shadow-lg ring-1 ring-leaf/15 animate-fade-up sm:block"
+            className="group flex items-center gap-2 rounded-2xl rounded-br-xs bg-white px-3.5 py-2 text-left text-xs font-semibold text-ink shadow-xl ring-2 ring-leaf/20 transition hover:scale-105"
           >
-            <span className="font-hand text-base text-leaf">Psst!</span> Chưa biết chọn mùi gì? Hỏi mình nhé ✨
+            <span className="size-2 rounded-full bg-flame animate-ping" />
+            <span>
+              <b className="text-leaf">Bé Nến Luvia:</b> Chưa biết chọn mùi gì? Hỏi mình nhé 🌿✨
+            </span>
           </button>
         )}
+
         <button
           onClick={() => setOpen((o) => !o)}
-          className={`relative size-16 overflow-hidden rounded-full bg-white shadow-xl ring-4 ring-leaf transition hover:scale-105 ${open ? "max-sm:hidden" : ""}`}
-          aria-label={open ? "Đóng chat tư vấn" : "Mở chat tư vấn mùi hương"}
+          className={`group relative size-16 overflow-hidden rounded-full bg-white shadow-2xl ring-4 ring-leaf transition duration-300 hover:scale-110 active:scale-95 ${
+            open ? "max-sm:hidden ring-flame" : ""
+          }`}
+          aria-label={open ? "Đóng chat tư vấn" : "Mở chat tư vấn mùi hương Bé Nến"}
         >
-          <Image src="/brand/exp-happy.jpg" alt="" fill sizes="64px" className="object-cover" />
-          {!open && <span className="absolute right-1 top-1 size-3 rounded-full bg-flame ring-2 ring-white" />}
+          <Image
+            src="/brand/exp-happy.jpg"
+            alt="Linh vật Bé Nến Luvia"
+            fill
+            sizes="64px"
+            className="object-cover transition duration-300 group-hover:rotate-6"
+          />
+          {!open && (
+            <span className="absolute right-1 top-1 flex size-3.5 items-center justify-center rounded-full bg-flame ring-2 ring-white">
+              <span className="size-1.5 rounded-full bg-white" />
+            </span>
+          )}
         </button>
       </div>
     </>

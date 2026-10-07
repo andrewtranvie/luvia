@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { getProduct, priceFor, type SizeId } from "./products";
+import { POLICY } from "./site";
 
 export interface CartItem {
   slug: string;
@@ -9,17 +10,25 @@ export interface CartItem {
   qty: number;
 }
 
+export type PaymentMethod = "cod" | "bank" | "momo";
+
 export interface Order {
   id: string;
   createdAt: string;
   items: (CartItem & { name: string; unitPrice: number })[];
   subtotal: number;
+  /** Tổng giảm (mã giảm giá + voucher đổi dầu) */
   discount: number;
+  /** Phí giao hàng + gói quà */
   shipping: number;
   total: number;
   customer: { name: string; phone: string; email: string; address: string; note: string };
+  /** Nhãn hiển thị của phương thức thanh toán */
   payment: string;
+  paymentMethod: PaymentMethod;
+  coupon: string | null;
   oilReturn: boolean;
+  giftWrap: boolean;
 }
 
 interface CartCtx {
@@ -37,12 +46,10 @@ interface CartCtx {
 const Ctx = createContext<CartCtx | null>(null);
 const KEY = "luvia-cart";
 
-export const FREE_SHIP_FROM = 500000;
-export const SHIPPING_FEE = 30000;
-export const COUPONS: Record<string, { pct: number; label: string }> = {
-  XANH10: { pct: 10, label: "Giảm 10% — Sống xanh mỗi ngày" },
-  LUVIA15: { pct: 15, label: "Giảm 15% — Khách hàng mới" },
-};
+// Giữ để tương thích ngược — nguồn gốc nằm ở ./site
+export { COUPONS } from "./site";
+export const FREE_SHIP_FROM = POLICY.freeShipFrom;
+export const SHIPPING_FEE = POLICY.shippingFee;
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);

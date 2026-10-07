@@ -10,10 +10,10 @@ import { openChat, useCart } from "@/lib/cart";
 const NAV = [
   { href: "/", label: "Trang chủ" },
   { href: "/san-pham", label: "Cửa hàng" },
+  { href: "/tu-thiet-ke", label: "Tự thiết kế nến" },
   { href: "/cau-chuyen", label: "Câu chuyện xanh" },
   { href: "/doi-ngu", label: "Đội ngũ (Bên B)" },
-  { href: "/tu-van", label: "Tư vấn AI" },
-  { href: "/lien-he", label: "Liên hệ" },
+  { href: "/quan-tri", label: "Thêm nến mới" },
 ];
 
 export default function Header() {
