@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, ShoppingBag, Sparkles, X } from "lucide-react";
 import Logo from "./Logo";
+import ThemeSwitcher from "./ThemeSwitcher";
 import { openChat, useCart } from "@/lib/cart";
 
 const NAV = [
@@ -13,7 +14,6 @@ const NAV = [
   { href: "/tu-thiet-ke", label: "Tự thiết kế nến" },
   { href: "/cau-chuyen", label: "Câu chuyện xanh" },
   { href: "/doi-ngu", label: "Đội ngũ (Bên B)" },
-  { href: "/quan-tri", label: "Thêm nến mới" },
 ];
 
 export default function Header() {
@@ -49,8 +49,16 @@ export default function Header() {
         scrolled ? "bg-cream/90 shadow-[0_6px_24px_-12px_rgba(46,58,34,0.25)] backdrop-blur-md" : "bg-cream"
       }`}
     >
-      <div className="bg-leaf px-4 py-1.5 text-center text-xs font-medium text-white sm:text-sm">
-        🌿 Miễn phí giao hàng cho đơn từ 500.000₫ · Mang 1 lít dầu ăn cũ đổi voucher 30.000₫
+      <div className="bg-leaf px-4 py-1.5 text-white">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-1.5 sm:text-sm">
+            <span>🌿 Miễn phí giao hàng từ 500k · Đổi 1L dầu cũ nhận voucher 30k</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="hidden text-white/80 sm:inline text-[11px] font-semibold">Chế độ xem:</span>
+            <ThemeSwitcher compact />
+          </div>
+        </div>
       </div>
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Logo />
@@ -114,6 +122,10 @@ export default function Header() {
               {n.label}
             </Link>
           ))}
+          <div className="mt-3 flex items-center justify-between border-t border-leaf/10 pt-3">
+            <span className="text-xs font-semibold text-ink-soft">Chọn giao diện:</span>
+            <ThemeSwitcher />
+          </div>
         </nav>
       )}
     </header>

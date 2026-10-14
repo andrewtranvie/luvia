@@ -279,12 +279,6 @@ export default function Home() {
                 >
                   Bắt đầu tự thiết kế <ArrowRight className="size-4" />
                 </Link>
-                <Link
-                  href="/quan-tri"
-                  className="inline-flex items-center gap-2 rounded-full border-2 border-leaf bg-white px-6 py-3.5 font-bold text-leaf hover:bg-cream"
-                >
-                  Thêm nến mới vào kho
-                </Link>
               </div>
             </div>
 

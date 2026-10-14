@@ -34,6 +34,7 @@ export default function Footer() {
             <li><Link className="hover:text-flame" href="/cau-chuyen">Câu chuyện thương hiệu</Link></li>
             <li><Link className="hover:text-flame" href="/cau-chuyen#quy-trinh">Quy trình tái chế</Link></li>
             <li><Link className="hover:text-flame" href="/doi-ngu">Đội ngũ sáng lập (Bên B)</Link></li>
+            <li><Link className="hover:text-flame" href="/demo-3d">Concept 3D (Stitch Demo)</Link></li>
             <li><Link className="hover:text-flame" href="/lien-he#doi-dau">Chương trình đổi dầu ăn</Link></li>
             <li><Link className="hover:text-flame" href="/lien-he#faq">Câu hỏi thường gặp</Link></li>
           </ul>

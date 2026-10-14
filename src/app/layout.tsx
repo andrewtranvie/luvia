@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Patrick_Hand } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart";
+import { ThemeProvider } from "@/lib/themeContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ChatWidget from "@/components/ChatWidget";
+import ThemeModeFloatingBar from "@/components/ThemeModeFloatingBar";
 
 const body = Be_Vietnam_Pro({
   variable: "--font-body",
@@ -43,10 +45,13 @@ export default function RootLayout({
     <html lang="vi" className={`${body.variable} ${hand.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <CartProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <ChatWidget />
+          <ThemeProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <ChatWidget />
+            <ThemeModeFloatingBar />
+          </ThemeProvider>
         </CartProvider>
       </body>
     </html>

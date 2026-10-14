@@ -139,6 +139,158 @@ body {
   animation: shimmer 3.5s infinite;
 }
 
+.clay-card {
+  background: #fffdf7;
+  border-radius: 28px;
+  box-shadow: 
+    0 16px 32px -8px rgba(84, 131, 51, 0.08),
+    0 8px 16px -4px rgba(46, 58, 34, 0.06),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 4px rgba(46, 58, 34, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.clay-btn-leaf {
+  background: linear-gradient(135deg, #5c9237 0%, #467029 100%);
+  color: white;
+  border-radius: 9999px;
+  box-shadow: 
+    0 8px 20px -4px rgba(84, 131, 51, 0.4),
+    inset 0 2px 3px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.clay-btn-leaf:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 24px -4px rgba(84, 131, 51, 0.5),
+    inset 0 2px 3px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.clay-btn-leaf:active {
+  transform: translateY(2px);
+  box-shadow: 
+    0 2px 8px -2px rgba(84, 131, 51, 0.4),
+    inset 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.clay-btn-flame {
+  background: linear-gradient(135deg, #f5b34e 0%, #e58d20 100%);
+  color: white;
+  border-radius: 9999px;
+  box-shadow: 
+    0 8px 20px -4px rgba(242, 169, 59, 0.45),
+    inset 0 2px 3px rgba(255, 255, 255, 0.4),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.clay-btn-flame:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 24px -4px rgba(242, 169, 59, 0.55),
+    inset 0 2px 3px rgba(255, 255, 255, 0.5),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.clay-pedestal {
+  background: linear-gradient(180deg, #f5ebd2 0%, #ebdcb8 100%);
+  border-radius: 9999px;
+  box-shadow: 
+    0 14px 28px -6px rgba(46, 58, 34, 0.12),
+    inset 0 3px 4px rgba(255, 255, 255, 0.7),
+    inset 0 -4px 6px rgba(180, 150, 110, 0.3);
+}
+
+.glass-clay-nav {
+  background: rgba(255, 253, 247, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 
+    0 12px 36px -8px rgba(46, 58, 34, 0.08),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================================
+   BẢN 2: 3D CLAYMORPHISM & PIXAR LIGHTING TRANSFORMATION
+   ============================================================ */
+html[data-style="clay3d"] body {
+  background: radial-gradient(circle at 50% 12%, #fffdf8 0%, #fbf4e1 50%, #f3e6c2 100%) !important;
+  background-attachment: fixed !important;
+}
+
+/* 3D Clay Cards */
+html[data-style="clay3d"] .card-interactive,
+html[data-style="clay3d"] article,
+html[data-style="clay3d"] .bg-white.rounded-\[28px\],
+html[data-style="clay3d"] .bg-white.rounded-\[32px\],
+html[data-style="clay3d"] .bg-white.rounded-\[40px\] {
+  background: #fffdf9 !important;
+  border-radius: 32px !important;
+  box-shadow: 
+    0 20px 40px -10px rgba(84, 131, 51, 0.12),
+    0 10px 20px -5px rgba(46, 58, 34, 0.08),
+    inset 0 2px 4px rgba(255, 255, 255, 0.95),
+    inset 0 -3px 5px rgba(46, 58, 34, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+html[data-style="clay3d"] .card-interactive:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: 
+    0 30px 60px -12px rgba(84, 131, 51, 0.22),
+    0 16px 28px -6px rgba(242, 169, 59, 0.28),
+    inset 0 2px 4px rgba(255, 255, 255, 1) !important;
+}
+
+/* 3D Buttons */
+html[data-style="clay3d"] .bg-leaf.rounded-full,
+html[data-style="clay3d"] button.bg-leaf {
+  background: linear-gradient(135deg, #5c9237 0%, #446d27 100%) !important;
+  box-shadow: 
+    0 8px 20px -4px rgba(84, 131, 51, 0.45),
+    inset 0 2px 3px rgba(255, 255, 255, 0.4),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.22) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+html[data-style="clay3d"] .bg-leaf.rounded-full:hover,
+html[data-style="clay3d"] button.bg-leaf:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 
+    0 12px 26px -4px rgba(84, 131, 51, 0.6),
+    inset 0 2px 4px rgba(255, 255, 255, 0.5) !important;
+}
+
+html[data-style="clay3d"] .bg-leaf.rounded-full:active,
+html[data-style="clay3d"] button.bg-leaf:active {
+  transform: translateY(2px) scale(0.98) !important;
+  box-shadow: 0 2px 8px -2px rgba(84, 131, 51, 0.4) !important;
+}
+
+/* 3D Flame Buttons */
+html[data-style="clay3d"] .bg-flame.rounded-full,
+html[data-style="clay3d"] .bg-flame-soft.rounded-full {
+  background: linear-gradient(135deg, #f7b44d 0%, #e18218 100%) !important;
+  color: white !important;
+  box-shadow: 
+    0 8px 20px -4px rgba(242, 169, 59, 0.5),
+    inset 0 2px 3px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* 3D Header Nav */
+html[data-style="clay3d"] header {
+  background: rgba(255, 253, 247, 0.92) !important;
+  backdrop-filter: blur(20px) !important;
+  box-shadow: 0 10px 30px -10px rgba(46, 58, 34, 0.12) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -146,3 +298,5 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+
