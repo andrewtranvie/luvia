@@ -12,23 +12,23 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  mode: "craft",
+  mode: "clay3d",
   setMode: () => {},
   toggleMode: () => {},
-  is3D: false,
+  is3D: true,
 });
 
 const STORAGE_KEY = "luvia_style_mode";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setModeState] = useState<StyleMode>("craft");
+  const [mode, setModeState] = useState<StyleMode>("clay3d");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     // 1. Check URL query param ?style=3d or ?style=craft
     const params = new URLSearchParams(window.location.search);
     const urlStyle = params.get("style");
-    let initialMode: StyleMode = "craft";
+    let initialMode: StyleMode = "clay3d";
 
     if (urlStyle === "3d" || urlStyle === "clay3d") {
       initialMode = "clay3d";

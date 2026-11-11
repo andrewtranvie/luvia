@@ -1,130 +1,147 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, ShoppingBag, Sparkles, X } from "lucide-react";
-import Logo from "./Logo";
-import ThemeSwitcher from "./ThemeSwitcher";
-import { openChat, useCart } from "@/lib/cart";
+import Icon from "./Icon";
+import { useShopCart } from "@/lib/shop-cart";
+import { NAV } from "@/content/vi";
 
-const NAV = [
-  { href: "/", label: "Trang chủ" },
-  { href: "/san-pham", label: "Cửa hàng" },
-  { href: "/tu-thiet-ke", label: "Tự thiết kế nến" },
-  { href: "/cau-chuyen", label: "Câu chuyện xanh" },
-  { href: "/doi-ngu", label: "Đội ngũ (Bên B)" },
-];
-
+/**
+ * Port 1:1 của header trong bản thiết kế Stitch (luvia_trang_ch/code.html):
+ * thanh thông báo mảnh phía trên + thanh điều hướng dạng viên thuốc trắng nổi
+ * trên nền surface xanh nhạt.
+ */
 export default function Header() {
   const pathname = usePathname();
-  const { count, lastAdded } = useCart();
+  const shopCart = useShopCart();
+  const count = shopCart?.count ?? 0;
   const [open, setOpen] = useState(false);
   const [bump, setBump] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (shopCart?.lastAdded) {
+      setBump(true);
+      const t = setTimeout(() => setBump(false), 450);
+      return () => clearTimeout(t);
+    }
+  }, [shopCart?.lastAdded]);
 
-  useEffect(() => {
-    if (!lastAdded) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- short animation trigger
-    setBump(true);
-    const t = setTimeout(() => setBump(false), 450);
-    return () => clearTimeout(t);
-  }, [lastAdded]);
-
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- close mobile menu on navigation
   useEffect(() => setOpen(false), [pathname]);
 
-  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const isActive = (href: string) => {
+    const path = href.split("#")[0];
+    return path !== "/" && path !== "" && pathname.startsWith(path);
+  };
 
+  // bg-surface = đúng màu nền trang: ở đầu trang không lộ dải nào, nhưng khi cuộn thì
+  // nội dung bị che hẳn thay vì xuyên qua khoảng trống quanh viên thuốc điều hướng.
   return (
-    <header
-      className={`sticky top-0 z-40 transition-all ${
-        scrolled ? "bg-cream/90 shadow-[0_6px_24px_-12px_rgba(46,58,34,0.25)] backdrop-blur-md" : "bg-cream"
-      }`}
-    >
-      <div className="bg-leaf px-4 py-1.5 text-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-1.5 sm:text-sm">
-            <span>🌿 Miễn phí giao hàng từ 500k · Đổi 1L dầu cũ nhận voucher 30k</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="hidden text-white/80 sm:inline text-[11px] font-semibold">Chế độ xem:</span>
-            <ThemeSwitcher compact />
-          </div>
-        </div>
+    <header className="sticky top-0 z-50 bg-surface">
+      <div className="flex items-center justify-center gap-space-sm bg-surface-container px-margin-mobile py-space-xs text-center text-label-sm text-on-surface-variant shadow-[0_1px_4px_rgba(46,58,34,0.04)] sm:px-margin">
+        <span className="size-2 shrink-0 animate-pulse rounded-full bg-secondary-container" />
+        <span>{NAV.announcement}</span>
       </div>
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <Logo />
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Điều hướng chính">
-          {NAV.map((n) => (
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-margin-mobile sm:px-margin">
+        <div className="flex w-full items-center justify-between rounded-full bg-surface-container-lowest/80 px-space-md py-space-sm backdrop-blur-xl clay-raise sm:px-space-lg">
+          <Link href="/" className="group flex items-center gap-space-sm" aria-label="Luvia — trang chủ">
+            <Image
+              src="/brand/logo-icon.png"
+              alt=""
+              width={444}
+              height={524}
+              className="h-10 w-auto shrink-0 transition group-hover:rotate-6"
+              priority
+            />
+            <Image
+              src="/brand/logo-wordmark.png"
+              alt="Luvia"
+              width={732}
+              height={170}
+              className="h-[21px] w-auto"
+              priority
+            />
+          </Link>
+
+          <nav className="hidden items-center gap-space-xs p-space-xs lg:flex" aria-label="Điều hướng chính">
+            {NAV.menu.map((n) => (
+              <Link
+                key={n.href}
+                href={n.href}
+                className={`rounded-full px-space-md py-space-sm text-label-md transition-all ${
+                  isActive(n.href)
+                    ? "bg-surface-container-high font-bold text-on-surface"
+                    : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface"
+                }`}
+              >
+                {n.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-space-sm sm:gap-space-md">
             <Link
-              key={n.href}
-              href={n.href}
-              className={`rounded-full px-4 py-2 text-[15px] font-medium transition ${
-                isActive(n.href) ? "bg-leaf-soft text-leaf-dark" : "text-ink-soft hover:bg-white/70 hover:text-ink"
+              href="/gio-hang"
+              aria-label={`Giỏ hàng (${count} sản phẩm)`}
+              className={`relative grid size-10 place-items-center rounded-full bg-surface-container-low text-on-surface-variant transition-all clay-inset hover:bg-surface-container hover:text-on-surface ${
+                bump ? "scale-110" : ""
               }`}
             >
-              {n.label}
+              <Icon name="shopping_bag" className="text-[20px]" />
+              {count > 0 && (
+                <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-secondary-container text-label-sm font-bold text-on-secondary-container shadow-[0_2px_6px_rgba(242,169,59,0.4)]">
+                  {count}
+                </span>
+              )}
             </Link>
-          ))}
-        </nav>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => openChat()}
-            className="hidden items-center gap-1.5 rounded-full border border-flame/50 bg-flame-soft px-4 py-2 text-sm font-semibold text-flame-dark transition hover:bg-flame hover:text-white sm:flex"
-          >
-            <Sparkles className="size-4" /> Hỏi Luvia
-          </button>
-          <Link
-            href="/gio-hang"
-            className={`relative grid size-11 place-items-center rounded-full bg-white text-leaf-dark shadow-sm ring-1 ring-leaf/10 transition hover:bg-leaf hover:text-white ${
-              bump ? "scale-110" : ""
-            }`}
-            aria-label={`Giỏ hàng (${count} sản phẩm)`}
-          >
-            <ShoppingBag className="size-5" />
-            {count > 0 && (
-              <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-flame px-1 text-[11px] font-bold text-white">
-                {count}
-              </span>
-            )}
-          </Link>
-          <button
-            className="grid size-11 place-items-center rounded-full bg-white shadow-sm ring-1 ring-leaf/10 lg:hidden"
-            onClick={() => setOpen((o) => !o)}
-            aria-label={open ? "Đóng menu" : "Mở menu"}
-            aria-expanded={open}
-          >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+            <Link
+              href={NAV.cta.href}
+              className="hidden items-center justify-center whitespace-nowrap rounded-full bg-primary-container px-space-lg py-space-sm text-label-md text-on-primary transition-all clay-press hover:bg-primary active:translate-y-0.5 sm:inline-flex"
+            >
+              {NAV.cta.label}
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setOpen((o) => !o)}
+              aria-label={open ? "Đóng menu" : "Mở menu"}
+              aria-expanded={open}
+              className="grid size-10 place-items-center rounded-full bg-surface-container-low text-on-surface-variant clay-inset lg:hidden"
+            >
+              <Icon name={open ? "close" : "menu"} className="text-[20px]" />
+            </button>
+          </div>
         </div>
       </div>
 
       {open && (
-        <nav className="border-t border-leaf/10 bg-cream-light px-4 pb-4 pt-2 lg:hidden" aria-label="Điều hướng di động">
-          {NAV.map((n) => (
+        <nav
+          className="mx-auto max-w-7xl px-margin-mobile pb-space-md lg:hidden sm:px-margin"
+          aria-label="Điều hướng di động"
+        >
+          <div className="flex flex-col gap-space-xs rounded-clay-lg bg-surface-container-lowest p-space-md clay-raise">
+            {NAV.menu.map((n) => (
+              <Link
+                key={n.href}
+                href={n.href}
+                className={`rounded-full px-space-md py-space-sm text-label-lg ${
+                  isActive(n.href)
+                    ? "bg-surface-container-high font-bold text-on-surface"
+                    : "text-on-surface-variant"
+                }`}
+              >
+                {n.label}
+              </Link>
+            ))}
             <Link
-              key={n.href}
-              href={n.href}
-              className={`block rounded-xl px-4 py-3 font-medium ${
-                isActive(n.href) ? "bg-leaf-soft text-leaf-dark" : "text-ink"
-              }`}
+              href={NAV.cta.href}
+              className="mt-space-xs inline-flex items-center justify-center rounded-full bg-primary-container px-space-lg py-space-sm text-label-lg text-on-primary clay-press"
             >
-              {n.label}
+              {NAV.cta.label}
             </Link>
-          ))}
-          <div className="mt-3 flex items-center justify-between border-t border-leaf/10 pt-3">
-            <span className="text-xs font-semibold text-ink-soft">Chọn giao diện:</span>
-            <ThemeSwitcher />
           </div>
         </nav>
       )}

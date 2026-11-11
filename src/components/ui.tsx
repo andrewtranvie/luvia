@@ -1,7 +1,7 @@
 "use client";
 
 import { Sparkles } from "lucide-react";
-import { openChat } from "@/lib/cart";
+import { openChat } from "@/lib/chat";
 
 export function SectionTitle({
   tag,
@@ -34,7 +34,7 @@ export function AskLuviaButton({
 }) {
   return (
     <button
-      onClick={() => openChat(prompt)}
+      onClick={() => openChat({ prompt })}
       className={`inline-flex items-center justify-center gap-2 rounded-full border-2 border-leaf bg-white px-6 py-3 font-semibold text-leaf transition hover:bg-leaf hover:text-white ${className}`}
     >
       <Sparkles className="size-4" /> {children}

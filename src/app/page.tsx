@@ -1,467 +1,253 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Droplet, Flame, Leaf, Quote, Recycle, ShieldCheck, Sprout, Star, Truck } from "lucide-react";
-import ProductCard from "@/components/ProductCard";
-import { AskLuviaButton, SectionTitle } from "@/components/ui";
-import { MOODS, PRODUCTS, type Mood } from "@/lib/products";
+import Icon from "@/components/Icon";
+import { HERO, SEASON_COPY, MASCOT_BANNER, STORY, FAQ } from "@/content/vi";
+import { SEASONS } from "@/lib/catalog";
+import { openChat } from "@/lib/chat";
+import { SEASON_THEME } from "@/lib/season-theme";
 
-const STEPS = [
-  {
-    icon: Droplet,
-    title: "Thu gom dầu ăn cũ",
-    desc: "Từ bếp gia đình, quán ăn và nhà hàng — thay vì đổ xuống cống gây ô nhiễm nguồn nước.",
-  },
-  {
-    icon: Recycle,
-    title: "Lọc sạch & tái chế",
-    desc: "Lọc cặn, khử mùi, tẩy màu nhiều lần rồi phối trộn cùng sáp thực vật thiên nhiên.",
-  },
-  {
-    icon: Flame,
-    title: "Thành nến thơm Luvia",
-    desc: "Thêm hương liệu an toàn, bấc cotton không chì, đổ khuôn thủ công trong hũ thuỷ tinh.",
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    name: "Minh Anh",
-    place: "Hà Nội",
-    text: "Mình không tin nổi là làm từ dầu ăn! Mùi Hoa Bưởi thơm dịu, không hề hắc. Đốt cả tối mà phòng thơm nhẹ nhàng.",
-    product: "Hoa Bưởi Tháng Hai",
-  },
-  {
-    name: "Quốc Huy",
-    place: "Đà Nẵng",
-    text: "Mua Trà Xanh Bạc Hà để trên bàn làm việc, tỉnh hẳn. Thích nhất là được đổi dầu ăn cũ lấy voucher.",
-    product: "Trà Xanh Bạc Hà",
-  },
-  {
-    name: "Thu Trang",
-    place: "TP. Hồ Chí Minh",
-    text: "Hỏi bạn Luvia AI mãi mới chọn được quà cho mẹ, tư vấn có tâm cực. Hộp giấy kraft xinh xỉu.",
-    product: "Nhài Sen Hồ Tây",
-  },
-];
-
-const STICKERS = [
-  { src: "/brand/sticker-light.jpg", alt: "Thắp ánh sáng xanh!" },
-  { src: "/brand/sticker-green.jpg", alt: "Sống xanh mỗi ngày" },
-  { src: "/brand/sticker-share.jpg", alt: "Cùng Luvia lan tỏa điều tốt đẹp!" },
-  { src: "/brand/sticker-planet.jpg", alt: "Yêu hành tinh của chúng ta" },
-];
-
-export default function Home() {
-  const featured = PRODUCTS.filter((p) => p.badge).slice(0, 4);
-  const moods: Mood[] = ["thu-gian", "tap-trung", "ngu-ngon", "am-cung", "tuoi-moi", "lang-man"];
+export default function HomePage() {
+  const [openFaq, setOpenFaq] = useState<string | null>("faq-nguyen-lieu");
 
   return (
     <>
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        {/* Hạt ánh sáng đom đóm / ngọn lửa bay bổng */}
-        <div className="pointer-events-none absolute -right-40 -top-40 size-[520px] rounded-full bg-flame-soft/70 blur-3xl" />
-        <div className="pointer-events-none absolute -left-32 bottom-0 size-[380px] rounded-full bg-leaf-soft blur-3xl" />
-        <div className="pointer-events-none absolute left-1/4 top-1/3 size-3 rounded-full bg-flame/80 blur-xs animate-firefly" />
-        <div className="pointer-events-none absolute right-1/3 top-1/4 size-4 rounded-full bg-flame/60 blur-xs animate-firefly [animation-delay:2s]" />
-        <div className="pointer-events-none absolute left-1/3 bottom-1/4 size-2.5 rounded-full bg-leaf/70 blur-xs animate-firefly [animation-delay:4s]" />
+      {/* ---------------- HERO ---------------- */}
+      <section className="relative w-full overflow-hidden px-margin-mobile py-space-xl sm:px-margin">
+        <div className="pointer-events-none absolute left-10 top-1/4 -z-10 size-96 rounded-full bg-secondary-container/15 blur-3xl" />
+        <div className="pointer-events-none absolute right-20 top-10 -z-10 size-[480px] rounded-full bg-primary-container/10 blur-3xl" />
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-16">
-          <div className="animate-fade-up">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-sm font-medium text-leaf shadow-sm ring-1 ring-leaf/15 hover:scale-105 transition">
-              <Recycle className="size-4 animate-spin-slow" /> 100% từ dầu ăn tái chế & sáp thực vật
-            </span>
-            <h1 className="mt-6 text-4xl font-extrabold leading-[1.1] text-ink sm:text-5xl lg:text-6xl">
-              Lan tỏa <span className="squiggle text-leaf">ánh sáng xanh</span>
-              <br />
-              cùng <span className="font-hand text-[1.15em] font-normal text-flame-dark inline-block hover:rotate-3 transition duration-300">Luvia</span> ♡
+        <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-space-xl lg:grid-cols-12">
+          <div className="flex flex-col gap-space-md lg:col-span-6">
+            <div className="inline-flex w-fit items-center gap-space-xs self-start rounded-full bg-surface-container-high px-space-md py-space-xs text-primary shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8),0_2px_8px_rgba(46,58,34,0.05)]">
+              <Icon name="spa" className="text-[16px] text-primary" fill />
+              <span className="text-label-md font-bold uppercase tracking-wider text-on-surface">
+                {HERO.eyebrow}
+              </span>
+            </div>
+
+            <h1 className="text-headline-xl-mobile leading-tight tracking-tight text-on-surface sm:text-headline-xl">
+              {HERO.title}
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-              Mỗi ngọn nến thơm Luvia được tái sinh từ dầu ăn đã qua sử dụng — sạch mùi, cháy êm, thơm dịu. Thắp lên
-              một ngọn nến, bạn cũng vừa giúp giữ sạch một dòng sông.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+
+            <p className="max-w-xl text-body-lg text-on-surface-variant">{HERO.body}</p>
+
+            <div className="flex flex-wrap items-center gap-space-md pt-space-sm">
               <Link
-                href="/san-pham"
-                className="btn-shine inline-flex items-center justify-center gap-2 rounded-full bg-leaf px-8 py-4 font-bold text-white shadow-lg shadow-leaf/25 glow-leaf transition hover:bg-leaf-dark hover:scale-105 active:scale-95"
+                href={HERO.primary.href}
+                className="inline-flex items-center justify-center rounded-full bg-primary-container px-space-lg py-space-md text-label-lg text-on-primary transition-all clay-press-lg hover:scale-[1.02] hover:bg-primary active:translate-y-0.5"
               >
-                Mua nến ngay <ArrowRight className="size-4" />
+                <Icon name="local_fire_department" className="mr-2 text-[20px]" />
+                {HERO.primary.label}
               </Link>
-              <AskLuviaButton prompt="Chào Luvia! Mình mới tìm hiểu nến thơm, bạn tư vấn giúp mình với." className="hover:scale-105 active:scale-95 transition">
-                Chưa biết chọn mùi? Hỏi Luvia
-              </AskLuviaButton>
-            </div>
-            <dl className="mt-10 grid max-w-lg grid-cols-3 gap-4">
-              {[
-                ["2.400+", "lít dầu ăn được tái chế"],
-                ["15.000+", "ngọn nến đã thắp sáng"],
-                ["4.9★", "điểm đánh giá trung bình"],
-              ].map(([n, l]) => (
-                <div key={l} className="group rounded-2xl p-2 transition hover:bg-white/60">
-                  <dt className="sr-only">{l}</dt>
-                  <dd className="text-2xl font-extrabold text-leaf-dark sm:text-3xl transition group-hover:scale-105">{n}</dd>
-                  <dd className="mt-1 text-xs leading-snug text-ink-soft sm:text-sm">{l}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-
-          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[48%_52%_44%_56%/50%_42%_58%_50%] shadow-2xl shadow-leaf/20 ring-8 ring-white animate-float-slow animate-pulse-glow">
-              <Image
-                src="/brand/mascot-main.jpg"
-                alt="Linh vật Luvia — ngọn nến nhỏ ôm trái đất"
-                fill
-                priority
-                sizes="(min-width: 1024px) 45vw, 90vw"
-                className="object-cover transition duration-700 hover:scale-105"
-              />
-            </div>
-            <div className="absolute -left-4 top-10 animate-float rounded-2xl bg-white px-4 py-3 shadow-lg ring-1 ring-leaf/10 sm:-left-8 hover:scale-110 transition">
-              <p className="font-hand text-lg leading-tight text-leaf">Sống xanh</p>
-              <p className="text-xs text-ink-soft">mỗi ngày 🌿</p>
-            </div>
-            <div className="absolute -right-2 bottom-12 animate-float rounded-2xl bg-white px-4 py-3 shadow-lg ring-1 ring-leaf/10 [animation-delay:1.5s] sm:-right-6 hover:scale-110 transition">
-              <p className="flex items-center gap-1 text-sm font-bold text-ink">
-                <Star className="size-4 fill-flame text-flame animate-pulse" /> 4.9/5
-              </p>
-              <p className="text-xs text-ink-soft">1.500+ đánh giá</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* MARQUEE */}
-      <div className="overflow-hidden border-y border-leaf/15 bg-leaf py-3 text-white" aria-hidden>
-        <div className="flex w-max animate-marquee gap-10 whitespace-nowrap font-hand text-xl">
-          {Array.from({ length: 2 }).flatMap((_, k) =>
-            ["Thắp ánh sáng xanh", "Sống xanh mỗi ngày", "Yêu hành tinh của chúng ta", "Cùng Luvia lan tỏa điều tốt đẹp", "Từ dầu ăn tái chế → nến thơm"].map(
-              (t) => (
-                <span key={`${k}-${t}`} className="flex items-center gap-10">
-                  {t} <Leaf className="size-4 text-flame" />
-                </span>
-              ),
-            ),
-          )}
-        </div>
-      </div>
-
-      {/* BÁN CHẠY */}
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-        <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-          <SectionTitle tag="Được yêu thích" title="Những mùi hương bán chạy" desc="Thủ công từng mẻ nhỏ, mỗi hũ là một câu chuyện." />
-          <Link href="/san-pham" className="inline-flex shrink-0 items-center gap-2 font-semibold text-leaf hover:text-flame-dark">
-            Xem tất cả <ArrowRight className="size-4" />
-          </Link>
-        </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {featured.map((p) => (
-            <ProductCard key={p.slug} product={p} />
-          ))}
-        </div>
-      </section>
-
-      {/* QUY TRÌNH */}
-      <section className="paper border-y border-leaf/10 py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <SectionTitle
-            center
-            tag="Hành trình tái sinh"
-            title={<>Từ dầu ăn tái chế → <span className="text-leaf">nến thơm thân thiện</span></>}
-            desc="1 lít dầu ăn đổ xuống cống có thể làm ô nhiễm hàng nghìn lít nước. Luvia biến nó thành ánh sáng."
-          />
-          <ol className="mt-14 grid gap-6 md:grid-cols-3">
-            {STEPS.map((s, i) => (
-              <li
-                key={s.title}
-                className="group relative rounded-[28px] bg-white p-8 text-center ring-1 ring-leaf/10 card-interactive"
+              <Link
+                href={HERO.secondary.href}
+                className="inline-flex items-center justify-center rounded-full bg-surface-container-lowest px-space-lg py-space-md text-label-lg text-on-surface shadow-[inset_2px_2px_4px_rgba(255,255,255,0.9),0_6px_16px_rgba(46,58,34,0.06)] transition-all hover:scale-[1.02] hover:bg-surface-container active:translate-y-0.5"
               >
-                <span className="absolute left-6 top-5 font-hand text-4xl text-flame/50 transition group-hover:scale-110 group-hover:text-flame">
-                  0{i + 1}
-                </span>
-                <div className="mx-auto grid size-20 place-items-center rounded-full bg-leaf-soft text-leaf transition duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:bg-leaf group-hover:text-white">
-                  <s.icon className="size-9" strokeWidth={1.6} />
-                </div>
-                <h3 className="mt-5 text-xl font-bold transition group-hover:text-leaf">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-soft">{s.desc}</p>
-                {i < STEPS.length - 1 && (
-                  <ArrowRight className="absolute -right-5 top-1/2 z-10 hidden size-8 -translate-y-1/2 rounded-full bg-flame p-1.5 text-white md:block animate-pulse" />
-                )}
-              </li>
-            ))}
-          </ol>
-          <div className="mt-10 text-center">
-            <Link href="/cau-chuyen#quy-trinh" className="inline-flex items-center gap-2 font-semibold text-leaf hover:text-flame-dark hover:translate-x-1 transition">
-              Tìm hiểu quy trình chi tiết <ArrowRight className="size-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* THEO TÂM TRẠNG */}
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-        <SectionTitle tag="Chọn theo cảm xúc" title="Hôm nay bạn muốn cảm thấy thế nào?" />
-        <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-          {moods.map((m) => (
-            <Link
-              key={m}
-              href={`/san-pham?mood=${m}`}
-              className="group rounded-3xl bg-white p-5 text-center ring-1 ring-leaf/10 card-interactive transition hover:bg-leaf hover:text-white"
-            >
-              <span className="inline-block text-4xl transition duration-300 group-hover:scale-125 group-hover:-rotate-6">{MOODS[m].emoji}</span>
-              <p className="mt-3 font-bold">{MOODS[m].label}</p>
-              <p className="mt-1 text-xs text-ink-soft group-hover:text-white/80">{MOODS[m].desc}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* AI TƯ VẤN */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="relative grid items-center gap-10 overflow-hidden rounded-[40px] bg-leaf px-6 py-12 text-white sm:px-12 lg:grid-cols-2">
-          <div className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-leaf-light/40 blur-2xl" />
-          <div className="relative">
-            <span className="font-hand text-2xl text-flame">Trợ lý mùi hương AI</span>
-            <h2 className="mt-2 text-3xl font-extrabold leading-tight sm:text-4xl">
-              Kể Luvia nghe một chút, Luvia chọn mùi giúp bạn
-            </h2>
-            <p className="mt-4 text-white/80">
-              Bạn hay mất ngủ? Cần tập trung? Đang tìm quà cho mẹ? Trò chuyện với Luvia để nhận gợi ý mùi hương hợp với
-              không gian, tâm trạng và ngân sách của bạn — chỉ trong 1 phút.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <AskLuviaButton prompt="Mình hay khó ngủ, nên chọn mùi nào?" className="border-white">
-                Bắt đầu trò chuyện
-              </AskLuviaButton>
-              <Link href="/tu-van" className="inline-flex items-center gap-2 rounded-full px-5 py-3 font-semibold text-white hover:text-flame">
-                Mở trang tư vấn <ArrowRight className="size-4" />
+                <Icon name="tune" className="mr-2 text-[20px] text-secondary" />
+                {HERO.secondary.label}
               </Link>
             </div>
-          </div>
-          <div className="relative space-y-3 rounded-[28px] bg-cream p-5 text-ink shadow-xl">
-            <div className="flex justify-end">
-              <p className="rounded-3xl rounded-br-md bg-leaf px-4 py-2.5 text-sm text-white">Mình cần nến cho góc làm việc, hay buồn ngủ lúc 3h chiều 😪</p>
-            </div>
-            <div className="flex gap-2.5">
-              <Image src="/brand/exp-happy.jpg" alt="" width={36} height={36} className="size-9 shrink-0 rounded-full object-cover" />
-              <p className="rounded-3xl rounded-tl-md bg-white px-4 py-2.5 text-sm leading-relaxed shadow-sm">
-                Bạn thử <b className="text-leaf">Trà Xanh Bạc Hà</b> nhé ✨ Bạc hà the nhẹ giúp tỉnh táo, trà xanh thanh mát mà
-                không nặng đầu. Muốn tươi hơn nữa thì <b className="text-leaf">Sả Chanh Rừng</b> cũng rất hợp! 🌿
-              </p>
-            </div>
-            <div className="flex gap-2 pl-11">
-              {["Trà Xanh Bạc Hà", "Sả Chanh Rừng"].map((n) => (
-                <span key={n} className="rounded-full bg-white px-3 py-1 text-xs font-medium text-leaf ring-1 ring-leaf/20">
-                  + {n}
+
+            <div className="flex items-center gap-space-xs pt-space-xs">
+              <button
+                type="button"
+                onClick={() => openChat()}
+                className="group inline-flex items-center gap-space-xs text-label-md text-secondary transition-colors hover:text-on-secondary-container"
+              >
+                <Icon
+                  name="light_mode"
+                  className="text-[18px] text-secondary-container transition-transform group-hover:rotate-12"
+                  fill
+                />
+                <span className="font-bold underline decoration-secondary-container underline-offset-4">
+                  {HERO.askLumi} →
                 </span>
-              ))}
+              </button>
+            </div>
+          </div>
+
+          {/* Khối 4 bệ mùa */}
+          <div className="relative flex items-center justify-center lg:col-span-6">
+            <div className="relative flex aspect-square w-full max-w-lg items-center justify-center p-space-md">
+              <div className="absolute inset-4 rounded-clay-xl bg-surface-container-lowest/60 shadow-[inset_2px_2px_6px_rgba(255,255,255,0.9),0_18px_40px_-10px_rgba(46,58,34,0.1)] backdrop-blur-md" />
+              <div className="relative z-10 grid h-full w-full grid-cols-2 gap-space-md p-space-sm">
+                {SEASONS.map((season) => {
+                  const theme = SEASON_THEME[season.id];
+                  const copy = SEASON_COPY[season.id];
+                  return (
+                    <Link
+                      key={season.id}
+                      href={`/san-pham/${season.id}`}
+                      className="relative flex flex-col items-center justify-between rounded-clay-lg bg-surface-container/70 p-space-sm shadow-[inset_1px_1px_3px_rgba(255,255,255,0.8),0_8px_16px_rgba(141,181,96,0.18)] transition-all duration-300 hover:-translate-y-1 sm:p-space-md"
+                    >
+                      <span
+                        className={`self-start rounded-full px-space-sm py-0.5 text-[11px] font-bold uppercase tracking-wider ${theme.chip}`}
+                      >
+                        {copy.season}
+                      </span>
+                      <span className="relative my-auto flex size-20 items-center justify-center sm:size-28">
+                        <span className={`absolute size-16 animate-pulse rounded-full blur-lg sm:size-20 ${theme.glow}`} />
+                        {season.image && (
+                          <Image
+                            src={season.image}
+                            alt={season.fullName}
+                            fill
+                            sizes="384px"
+                            quality={90}
+                            className="relative z-10 rounded-clay object-cover"
+                          />
+                        )}
+                      </span>
+                      <span className="flex w-full items-center justify-between pt-space-xs text-label-sm text-on-surface-variant">
+                        <span className="truncate font-semibold">{copy.name}</span>
+                        <span
+                          className="size-2 shrink-0 rounded-full"
+                          style={{ backgroundColor: season.color.primary }}
+                        />
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* TỰ THIẾT KẾ NẾN */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <div className="rounded-[40px] bg-cream-light p-8 ring-1 ring-leaf/15 sm:p-12">
-          <div className="grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-            <div>
-              <span className="brush-tag text-base">Mới: Quà tặng độc bản</span>
-              <h2 className="mt-3 text-3xl font-extrabold text-ink sm:text-4xl">
-                Tự tay chọn mùi & in tên người nhận lên nhãn nến
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-ink-soft">
-                Biến ngọn nến thơm thành món quà vô giá: Bạn chỉ cần chọn mùi hương nền, gõ lời chúc yêu thương (VD: <i>“Dành tặng mẹ yêu”</i>, <i>“Chúc mừng sinh nhật Lan”</i>), Luvia sẽ in riêng tem nhãn thủ công và đóng hộp quà trang trọng.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-4">
-                <Link
-                  href="/tu-thiet-ke"
-                  className="inline-flex items-center gap-2 rounded-full bg-leaf px-7 py-3.5 font-bold text-white shadow-md hover:bg-leaf-dark"
+      {/* ---------------- BĂNG CHUYỆN MASCOT LUMI ---------------- */}
+      <section className="w-full px-margin-mobile py-space-lg sm:px-margin">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-clay-xl bg-surface-container p-space-lg shadow-[inset_2px_2px_4px_rgba(255,255,255,0.9),0_12px_24px_rgba(46,58,34,0.06)]">
+          <div className="pointer-events-none absolute -bottom-10 -right-10 size-72 rounded-full bg-secondary-fixed/40 blur-3xl" />
+          {/* Bỏ ảnh bên trái → khối chữ chiếm trọn bề ngang, căn giữa cho cân đối */}
+          <div className="relative z-10 flex flex-col items-center gap-space-sm text-center">
+            <div className="inline-flex items-center gap-space-xs rounded-full bg-surface-container-lowest px-space-sm py-1 text-label-sm text-primary clay-inset">
+              <Icon name="recycling" className="text-[16px]" />
+              <span>{MASCOT_BANNER.eyebrow}</span>
+            </div>
+            <h2 className="text-headline-md text-on-surface">{MASCOT_BANNER.title}</h2>
+            <p className="max-w-2xl text-body-md text-on-surface-variant">{MASCOT_BANNER.body}</p>
+
+            <div className="grid w-full grid-cols-1 gap-space-sm pt-space-xs sm:grid-cols-3">
+              {MASCOT_BANNER.steps.map((step, idx) => (
+                <div
+                  key={step.title}
+                  className="flex items-center gap-space-sm rounded-clay bg-surface-container-lowest/80 p-space-sm text-left shadow-[inset_1px_1px_2px_rgba(255,255,255,0.9)]"
                 >
-                  Bắt đầu tự thiết kế <ArrowRight className="size-4" />
-                </Link>
-              </div>
+                  <span
+                    className={`grid size-9 shrink-0 place-items-center rounded-full ${
+                      idx === 0
+                        ? "bg-secondary-fixed text-on-secondary-fixed"
+                        : idx === 1
+                          ? "bg-primary-fixed text-on-primary-fixed"
+                          : "bg-tertiary-fixed text-on-tertiary-fixed"
+                    }`}
+                  >
+                    <Icon
+                      name={idx === 0 ? "water_drop" : idx === 1 ? "sync_alt" : "eco"}
+                      className="text-[18px]"
+                    />
+                  </span>
+                  <span className="flex flex-col">
+                    <span className="text-label-md text-on-surface">{step.title}</span>
+                    <span className="text-label-sm font-normal text-on-surface-variant">{step.desc}</span>
+                  </span>
+                </div>
+              ))}
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-md ring-1 ring-leaf/10 text-center">
-              <span className="font-hand text-xl text-leaf-dark">Góc bình yên của Mai ♡</span>
-              <p className="mt-1 text-xs text-ink-soft">“Mong em luôn an yên và mỉm cười mỗi ngày”</p>
-              <div className="mt-4 flex items-center justify-center gap-2 text-xs font-bold text-flame-dark">
-                <span>✦ Bấc Gỗ Sồi tí tách</span>
-                <span>✦ Hũ nến 200g</span>
-                <span>✦ In nhãn theo yêu cầu</span>
-              </div>
-            </div>
+            <Link
+              href="/tu-van"
+              className="mt-space-sm inline-flex items-center gap-space-xs rounded-full bg-secondary-container px-space-lg py-space-sm text-label-md text-on-secondary-container shadow-[inset_0_2px_3px_rgba(255,255,255,0.5),0_6px_16px_rgba(242,169,59,0.3)] transition hover:opacity-95"
+            >
+              <Icon name="forum" className="text-[18px]" />
+              {MASCOT_BANNER.cta}
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* CÂU CHUYỆN */}
-      <section className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-2">
-        <div className="relative">
-          <Image
-            src="/brand/scene-candle.jpg"
-            alt="Luvia ôm hũ nến bên hộp giấy kraft"
-            width={654}
-            height={564}
-            className="w-full rounded-[40px] object-cover shadow-xl"
-          />
-          <div className="absolute -bottom-6 right-6 max-w-[260px] rounded-3xl bg-white p-5 shadow-xl ring-1 ring-leaf/10">
-            <Quote className="size-6 text-flame" />
-            <p className="mt-1 font-hand text-lg leading-snug text-leaf-dark">
-              Không chỉ là một ngọn nến, mà là hành trình vì một tương lai xanh hơn ♡
-            </p>
+      {/* ---------------- CÂU CHUYỆN ---------------- */}
+      <section id={STORY.id} className="w-full px-margin-mobile py-space-xl sm:px-margin">
+        <div className="mx-auto grid max-w-6xl items-center gap-space-xl lg:grid-cols-2">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-clay-xl bg-surface-container-low p-space-sm clay-raise">
+            <Image
+              src="/stitch/story-scene.jpg"
+              alt="Câu chuyện Luvia"
+              fill
+              sizes="(max-width:1024px) 100vw, 1080px"
+              quality={90}
+              className="rounded-clay-lg object-cover p-space-sm"
+            />
+          </div>
+
+          <div>
+            <span className="text-label-md font-bold uppercase tracking-widest text-primary">
+              HÀNH TRÌNH TÁI SINH
+            </span>
+            <h2 className="mt-space-xs text-headline-lg-mobile text-on-surface sm:text-headline-lg">
+              {STORY.title}
+            </h2>
+            <div className="mt-space-md flex flex-col gap-space-sm text-body-md text-on-surface-variant">
+              {STORY.paragraphs.map((p, idx) => (
+                <p key={idx}>{p}</p>
+              ))}
+            </div>
+            <Link
+              href={STORY.cta.href}
+              className="mt-space-lg inline-flex items-center gap-space-xs rounded-full bg-surface-container-lowest px-space-lg py-space-sm text-label-md text-on-surface clay-raise-sm transition hover:bg-surface-container"
+            >
+              {STORY.cta.label}
+              <Icon name="arrow_forward" className="text-[18px]" />
+            </Link>
           </div>
         </div>
-        <div>
-          <SectionTitle tag="Câu chuyện Luvia" title="Bắt đầu từ một chảo dầu đã nguội" />
-          <p className="mt-5 leading-relaxed text-ink-soft">
-            Mỗi ngày, hàng nghìn lít dầu ăn đã qua sử dụng bị đổ thẳng xuống cống, làm tắc nghẽn đường ống và ô nhiễm nguồn
-            nước. Chúng mình tự hỏi: <i>liệu thứ bị bỏ đi ấy có thể trở thành điều gì đẹp đẽ?</i>
-          </p>
-          <p className="mt-4 leading-relaxed text-ink-soft">
-            Sau hàng trăm mẻ thử nghiệm, Luvia ra đời — những ngọn nến thơm được tái sinh từ dầu ăn, mang theo hương thơm
-            của thiên nhiên Việt Nam và một lời nhắn nhỏ: sống xanh có thể bắt đầu từ chính căn bếp nhà mình.
-          </p>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-            {[
-              [Sprout, "Sáp thực vật, không paraffin"],
-              [ShieldCheck, "Bấc cotton không chì"],
-              [Recycle, "Hũ thuỷ tinh tái sử dụng"],
-              [Leaf, "Bao bì giấy kraft tái chế"],
-            ].map(([Icon, t]) => {
-              const I = Icon as typeof Leaf;
+      </section>
+
+      {/* ---------------- FAQ ---------------- */}
+      <section id={FAQ.id} className="w-full px-margin-mobile py-space-xl sm:px-margin">
+        <div className="mx-auto max-w-4xl">
+          <div className="text-center">
+            <span className="text-label-md font-bold uppercase tracking-widest text-primary">
+              GIẢI ĐÁP THẮC MẮC
+            </span>
+            <h2 className="mt-space-xs text-headline-lg-mobile text-on-surface sm:text-headline-lg">
+              {FAQ.title}
+            </h2>
+          </div>
+
+          <div className="mt-space-xl flex flex-col gap-space-sm">
+            {FAQ.items.map((item) => {
+              const isOpen = openFaq === item.id;
               return (
-                <li key={t as string} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-sm font-medium ring-1 ring-leaf/10">
-                  <I className="size-5 text-leaf" /> {t as string}
-                </li>
+                <div
+                  key={item.id}
+                  id={item.id}
+                  className="overflow-hidden rounded-clay-lg bg-surface-container-lowest clay-raise"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(isOpen ? null : item.id)}
+                    className="flex w-full items-center justify-between gap-space-md p-space-md text-left text-label-lg text-on-surface transition hover:text-primary"
+                  >
+                    <span>{item.q}</span>
+                    <Icon
+                      name="expand_more"
+                      className={`shrink-0 text-[20px] text-on-surface-variant transition-transform duration-200 ${
+                        isOpen ? "rotate-180 text-primary" : ""
+                      }`}
+                    />
+                  </button>
+                  {isOpen && (
+                    <div className="border-t border-surface-container px-space-md pb-space-md pt-space-sm text-body-md text-on-surface-variant">
+                      {item.a}
+                    </div>
+                  )}
+                </div>
               );
             })}
-          </ul>
-          <Link
-            href="/cau-chuyen"
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-leaf px-7 py-3.5 font-semibold text-white hover:bg-leaf-dark"
-          >
-            Đọc câu chuyện đầy đủ <ArrowRight className="size-4" />
-          </Link>
-        </div>
-      </section>
-
-      {/* ĐỘI NGŨ & DỊCH VỤ BÊN B */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <div className="overflow-hidden rounded-[40px] bg-white p-8 shadow-sm ring-1 ring-leaf/10 sm:p-12">
-          <div className="grid items-center gap-10 lg:grid-cols-2">
-            <div>
-              <span className="brush-tag text-lg">Đội ngũ sáng lập · Bên B</span>
-              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
-                Nhóm bạn trẻ sinh viên & Hành trình khởi nghiệp xanh
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-ink-soft">
-                Luvia được sáng lập bởi nhóm 4 bạn trẻ yêu môi trường. Với vai trò là <b>Bên B (Đơn vị nghiên cứu & sản xuất)</b>,
-                chúng mình không chỉ bán lẻ nến thơm mà còn cung cấp <b>Quà tặng doanh nghiệp (In logo riêng)</b>, tổ chức <b>Workshop làm nến cho trường học/công ty</b> và thiết lập <b>Trạm thu gom dầu ăn đối tác</b>.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold text-leaf-dark">
-                <span className="rounded-full bg-leaf-soft px-3.5 py-1.5">✦ Cung cấp Gift Set B2B</span>
-                <span className="rounded-full bg-flame-soft px-3.5 py-1.5 text-flame-dark">✦ Workshop Team-building</span>
-                <span className="rounded-full bg-leaf-soft px-3.5 py-1.5">✦ Hợp đồng & Hóa đơn đầy đủ</span>
-              </div>
-              <div className="mt-8 flex gap-4">
-                <Link
-                  href="/doi-ngu"
-                  className="inline-flex items-center gap-2 rounded-full bg-leaf px-7 py-3.5 font-bold text-white shadow-md hover:bg-leaf-dark"
-                >
-                  Xem hồ sơ năng lực Bên B <ArrowRight className="size-4" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-3xl bg-cream p-5 text-center">
-                <Image src="/brand/exp-nature.jpg" alt="Minh Khôi" width={80} height={80} className="mx-auto size-16 rounded-full object-cover ring-2 ring-leaf/20" />
-                <h4 className="mt-3 text-sm font-bold text-ink">Minh Khôi</h4>
-                <p className="text-xs text-leaf">R&D Công thức sáp</p>
-              </div>
-              <div className="rounded-3xl bg-cream p-5 text-center">
-                <Image src="/brand/exp-happy.jpg" alt="Ngọc Mai" width={80} height={80} className="mx-auto size-16 rounded-full object-cover ring-2 ring-leaf/20" />
-                <h4 className="mt-3 text-sm font-bold text-ink">Ngọc Mai</h4>
-                <p className="text-xs text-leaf">Thiết kế & Mascot</p>
-              </div>
-              <div className="rounded-3xl bg-cream p-5 text-center">
-                <Image src="/brand/exp-playful.jpg" alt="Tuấn Anh" width={80} height={80} className="mx-auto size-16 rounded-full object-cover ring-2 ring-leaf/20" />
-                <h4 className="mt-3 text-sm font-bold text-ink">Tuấn Anh</h4>
-                <p className="text-xs text-leaf">Công nghệ & AI</p>
-              </div>
-              <div className="rounded-3xl bg-cream p-5 text-center">
-                <Image src="/brand/exp-love.jpg" alt="Khánh Vy" width={80} height={80} className="mx-auto size-16 rounded-full object-cover ring-2 ring-leaf/20" />
-                <h4 className="mt-3 text-sm font-bold text-ink">Khánh Vy</h4>
-                <p className="text-xs text-leaf">Đối tác & B2B</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ĐÁNH GIÁ */}
-      <section className="paper border-y border-leaf/10 py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <SectionTitle center tag="Khách hàng nói gì" title="Những ngọn nến đã được thắp lên" />
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
-              <figure key={t.name} className="rounded-[28px] bg-white p-7 shadow-sm ring-1 ring-leaf/10">
-                <div className="flex gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="size-4 fill-flame text-flame" />
-                  ))}
-                </div>
-                <blockquote className="mt-4 leading-relaxed text-ink">“{t.text}”</blockquote>
-                <figcaption className="mt-5 flex items-center gap-3 border-t border-leaf/10 pt-4">
-                  <span className="grid size-10 place-items-center rounded-full bg-leaf-soft font-bold text-leaf">{t.name[0]}</span>
-                  <span>
-                    <span className="block text-sm font-semibold">{t.name} · {t.place}</span>
-                    <span className="block text-xs text-ink-soft">Đã mua: {t.product}</span>
-                  </span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* STICKERS + ĐỔI DẦU */}
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="relative overflow-hidden rounded-[36px] bg-white p-3 shadow-xl ring-1 ring-leaf/10 card-interactive">
-            <Image
-              src="/brand/stickers-set-hd.jpg"
-              alt="Bộ sticker truyền thông Luvia siêu nét"
-              width={700}
-              height={525}
-              className="w-full rounded-[28px] object-cover transition duration-500 hover:scale-[1.02]"
-              priority
-            />
-          </div>
-          <div id="doi-dau">
-            <SectionTitle
-              tag="Chương trình xanh"
-              title="Mang dầu ăn cũ — nhận ánh sáng mới"
-              desc="Gom dầu ăn đã qua sử dụng vào chai, mang đến điểm thu gom của Luvia hoặc gửi kèm khi nhận hàng."
-            />
-            <ul className="mt-6 space-y-3">
-              {[
-                ["1 lít dầu ăn cũ", "Voucher 30.000₫"],
-                ["Trả lại hũ thuỷ tinh rỗng", "Giảm 10% đơn tiếp theo"],
-                ["Đơn từ 500.000₫", "Miễn phí giao hàng toàn quốc"],
-              ].map(([a, b]) => (
-                <li key={a} className="flex items-center justify-between gap-4 rounded-2xl bg-white px-5 py-4 ring-1 ring-leaf/10">
-                  <span className="flex items-center gap-3 font-medium">
-                    {a === "Đơn từ 500.000₫" ? <Truck className="size-5 text-leaf" /> : <Recycle className="size-5 text-leaf" />} {a}
-                  </span>
-                  <span className="rounded-full bg-flame-soft px-3 py-1 text-sm font-semibold text-flame-dark">{b}</span>
-                </li>
-              ))}
-            </ul>
-            <Link href="/lien-he#doi-dau" className="mt-6 inline-flex items-center gap-2 font-semibold text-leaf hover:text-flame-dark">
-              Xem điểm thu gom <ArrowRight className="size-4" />
-            </Link>
           </div>
         </div>
       </section>

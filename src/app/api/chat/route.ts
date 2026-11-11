@@ -1,29 +1,80 @@
-import { catalogForAI, PRODUCTS } from "@/lib/products";
-
+import { catalogForAI } from "@/lib/catalog";
+import { clientIp, rateLimit } from "@/lib/server/integrations";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const SYSTEM_PROMPT = `Bạn là "Luvia" — linh vật kiêm chuyên gia tư vấn mùi hương của thương hiệu nến thơm Luvia (Việt Nam).
-Luvia là một ngọn nến nhỏ dễ thương, đeo khăn lá xanh, luôn vui vẻ, ấm áp, yêu thiên nhiên.
+const SYSTEM_PROMPT_HEAD = `Bạn là "Lumi" — trợ lý AI tư vấn mùi hương của thương hiệu nến thơm Luvia.
+Lumi là người bạn đồng hành ấm áp, tinh tế, luôn lắng nghe và thấu hiểu cảm xúc của khách hàng.
 
-VỀ THƯƠNG HIỆU:
-- Nến Luvia làm thủ công từ dầu ăn đã qua sử dụng: thu gom → lọc cặn, khử mùi, tẩy màu → phối trộn với sáp thực vật → thêm tinh dầu/hương liệu an toàn → đổ khuôn trong hũ thuỷ tinh tái sử dụng được.
-- Thành phẩm không còn mùi dầu ăn, bấc cotton không chì, cháy sạch, ít khói.
-- Slogan: "Lan tỏa ánh sáng xanh cùng Luvia". "Không chỉ là một ngọn nến, mà là hành trình vì một tương lai xanh hơn."
-- Chính sách: miễn phí giao hàng đơn từ 500.000₫ (dưới đó phí 30.000₫). Mang 1 lít dầu ăn cũ đến điểm thu gom đổi voucher 30.000₫. Hũ thuỷ tinh rỗng gửi lại được giảm 10% đơn sau. Mã XANH10 giảm 10%.
-- Mẹo dùng nến: lần đầu đốt 2–3 tiếng cho sáp tan đều mặt; cắt bấc còn ~5mm trước mỗi lần đốt; không đốt quá 4 tiếng liên tục; để xa rèm, trẻ em và thú cưng.
+VỀ THƯƠNG HIỆU LUVIA:
+- Nến thơm Luvia được phát triển theo hướng tận dụng dầu ăn đã qua sử dụng sau xử lý làm một phần nguyên liệu phối trộn cùng sáp thực vật.
+- Định vị: "LUVIA — Hương thơm từ những điều tưởng chừng bỏ đi. Nến thơm tái chế nâng cấp từ dầu ăn đã qua sử dụng."
+- Bộ sưu tập chính: BỘ SƯU TẬP BỐN MÙA (Xuân – Hạ – Thu – Đông).
+- Gói quà: mỗi hũ có thể thêm hộp quà có thiệp để viết lời nhắn, chọn ngay trên trang sản phẩm.`;
 
-DANH MỤC SẢN PHẨM (chỉ được gợi ý các sản phẩm này):
-${catalogForAI()}
+const SYSTEM_PROMPT_RULES = `QUY TẮC TƯ VẤN CỦA LUMI:
+- Xưng "mình", gọi khách là "bạn". Giọng thân thiện, ấm áp, ngắn gọn (dưới 100 từ).
+- Hỏi ngắn từng câu về sở thích, cảm giác mong muốn hoặc người nhận quà; KHÔNG bắt khách trả lời bảng câu hỏi dài.
+- Chỉ đề xuất 1–2 lựa chọn có trong danh mục.
+- Khi đề xuất sản phẩm, BẮT BUỘC chèn token mã dạng [[season:xuan]], [[season:ha]], [[season:thu]], hoặc [[season:dong]].
+- Mẫu câu chuẩn: "Theo sở thích bạn vừa chia sẻ, mình gợi ý [tên mùa]. Mùa này có cảm xúc [cảm xúc], phù hợp với mong muốn [sở thích của khách]. Bạn muốn xem sản phẩm hay chọn thêm mẫu hộp?"
+- Khi khách hỏi ngoài danh mục hoặc chưa đủ thông tin: "Mình chưa có thông tin chắc chắn về lựa chọn này. Bạn muốn chuyển sang trao đổi với đội ngũ Luvia không? [[handoff]]"
+- Không đưa ra các tuyên bố tuyệt đối về y tế, không bịa đặt số liệu hay giấy chứng nhận chưa có kiểm nghiệm thực tế.`;
 
-CÁCH TƯ VẤN:
-- Trả lời bằng tiếng Việt, thân thiện, xưng "mình" và gọi khách là "bạn". Ngắn gọn (tối đa ~120 từ), dùng 1–2 emoji phù hợp (🌿✨🕯️💛).
-- Nếu chưa đủ thông tin, hỏi lại 1 câu ngắn về: không gian (phòng ngủ, làm việc, phòng khách…), thời điểm/tâm trạng mong muốn, mùi yêu thích hoặc ghét, ngân sách, mua để dùng hay tặng.
-- Khi gợi ý, chọn 1–3 sản phẩm phù hợp nhất. Mỗi khi nhắc đến sản phẩm, BẮT BUỘC viết đúng mã dạng [[slug]] thay cho tên (ví dụ: "Bạn thử [[oai-huong-da-lat]] nhé"). Giao diện sẽ tự hiển thị tên và thẻ sản phẩm. Giải thích ngắn gọn vì sao hợp (nốt hương, cảm giác).
-- Có thể gợi ý size (Mini 100g, Classic 200g, Grand 350g) theo ngân sách hoặc làm quà.
-- Dùng **chữ đậm** cho ý quan trọng. Không dùng tiêu đề markdown, không dùng bảng.
-- Không bịa sản phẩm, giá, khuyến mãi ngoài thông tin trên. Câu hỏi về y tế: nhắc khách tham khảo bác sĩ, phụ nữ mang thai/người hen suyễn nên dùng ở phòng thông thoáng.
-- Nếu khách hỏi ngoài chủ đề nến/mùi hương/thương hiệu, nhẹ nhàng đưa câu chuyện quay lại việc tư vấn.`;
+/* catalogForAI() đọc SEASONS/VARIANTS/SEASON_COPY nên tên - giá - trọng lượng - tình trạng hàng
+   luôn khớp web: sửa vi.ts hay catalog.ts là Lumi biết ngay. Trước đây chỗ này là bảng 4 mùa
+   viết cứng, thiếu cả tên sản phẩm lẫn giá, và cả 4 dòng cảm xúc đều lệch với vi.ts — Lumi tư
+   vấn một bộ sản phẩm khác với bộ đang bán. Gọi trong hàm (không phải hằng module) để chạy lúc
+   có request chứ không đóng băng lúc build. */
+const systemPrompt = () =>
+  `${SYSTEM_PROMPT_HEAD}\n\nDANH MỤC THẬT (chỉ đề xuất 1-2 mùa phù hợp):\n${catalogForAI()}\n\n${SYSTEM_PROMPT_RULES}`;
+
+/* Cắt sớm nếu model chưa chịu phản hồi trong ngần này. Đo 2026-11-06: lúc quá tải,
+   gemini-3.8-flash mất 3.7s / 14.7s / 39.6s mới trả về 503, còn 3.6-flash trả lời xong hẳn
+   trong 3.8–5.3s. Không cắt thì khách ngồi nhìn khung chat trống gần 2 phút (đo thật: 1m53s)
+   — Vercel không giết hàm (Hobby cho tới 300s), nhưng khách thì bỏ đi từ lâu rồi.
+   fetch() resolve ngay khi nhận header nên mốc này chỉ tính tới lúc model bắt đầu trả lời;
+   clearTimeout ở finally để không cắt ngang stream đang chạy. */
+async function callGemini(model: string, apiKey: string, prompt: string, messages: Msg[], timeoutMs: number) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    return await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+        signal: ctrl.signal,
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: prompt }] },
+          contents: messages.map((m) => ({
+            role: m.role === "assistant" ? "model" : "user",
+            parts: [{ text: m.content }],
+          })),
+          /* KHÔNG gửi thinkingConfig. Nhóm flash-lite vốn đã không suy luận: đo 2026-11-06 trên
+             đúng prompt này, cả 3.5-lite và 3.1-lite đều trả thoughtsTokenCount = 0 dù không
+             cấu hình gì. Mà gửi thinkingConfig vào 3.5-flash-lite thì nó đáp 400 INVALID_ARGUMENT
+             (model này không nhận field đó) — tức là thêm vào chỉ làm hỏng, không được gì.
+             Nếu sau này đổi GEMINI_MODEL về nhóm flash thường thì phải thêm lại, vì flash mặc
+             định suy luận mức medium: đo được 431–574 token suy luận mỗi câu, bị tính tiền như
+             output và làm khách chờ tới 23s. */
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 1024,
+          },
+        }),
+      },
+    );
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/* Chỉ thử lại khi lỗi có khả năng tạm thời. 400/401/403 là sai request hoặc sai key — gọi
+   model khác cũng sai y như vậy, thử lại chỉ làm khách chờ thêm một lượt vô ích. */
+const RETRYABLE = new Set([429, 500, 502, 503, 504]);
 
 function sanitize(body: unknown): Msg[] | null {
   if (!body || typeof body !== "object" || !Array.isArray((body as { messages?: unknown }).messages)) return null;
@@ -35,14 +86,28 @@ function sanitize(body: unknown): Msg[] | null {
         ((m as Msg).role === "user" || (m as Msg).role === "assistant") &&
         typeof (m as Msg).content === "string",
     )
-    .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }))
-    .slice(-16);
-  // Gemini yêu cầu lượt đầu tiên là của người dùng
+    .map((m) => ({ role: m.role, content: m.content.slice(0, 1000) }))
+    .slice(-12);
   while (msgs.length && msgs[0].role !== "user") msgs.shift();
   return msgs.length ? msgs : null;
 }
 
 export async function POST(req: Request) {
+  /* Chặn trước khi làm bất cứ việc gì khác, vì từ 2026-11-06 key Gemini đã gắn billing: mỗi
+     lượt chat là tiền thật, mà route này công khai, không đăng nhập, ai cũng gọi được bằng
+     script. Hai tầng: 12 lượt/phút chặn kiểu bấm liên tục, 80 lượt/giờ chặn kiểu chạy vòng
+     lặp cả buổi. Khách thật hỏi Lumi chọn mùi hương hiếm khi quá 10-15 lượt một lượt ghé.
+     Trả 429 vì src/lib/chat.ts:141 đã bắt sẵn mã này và hiện LUMI.rateLimited — không phải
+     sửa giao diện. KHÔNG rơi về fallbackAnswer() ở đây: fallback dành cho lúc API hỏng, còn
+     đây là cố ý chặn, trả lời tử tế lại thành ra khuyến khích gọi tiếp.
+     Giới hạn đếm trong bộ nhớ từng instance (xem integrations.ts) nên tổng thực tế có thể
+     cao hơn khi Vercel chạy nhiều instance — đây là van giảm áp, không phải khoá tuyệt đối.
+     Trần chi tiêu thật vẫn là số dư prepay bên Google. */
+  const ip = clientIp(req);
+  if (!rateLimit(`chat:min:${ip}`, 12, 60_000) || !rateLimit(`chat:hour:${ip}`, 80, 3600_000)) {
+    return new Response("Bạn đang hỏi hơi nhanh, thử lại sau ít phút nhé.", { status: 429 });
+  }
+
   let messages: Msg[] | null;
   try {
     messages = sanitize(await req.json());
@@ -54,29 +119,45 @@ export async function POST(req: Request) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return textStream(fallbackAnswer(messages[messages.length - 1].content));
 
-  const model = process.env.GEMINI_MODEL || "gemini-flash-latest";
-  const upstream = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: messages.map((m) => ({
-          role: m.role === "assistant" ? "model" : "user",
-          parts: [{ text: m.content }],
-        })),
-        generationConfig: { temperature: 0.8, maxOutputTokens: 2048 },
-      }),
-    },
-  ).catch(() => null);
+  /* Ghim mã model cố định, KHÔNG dùng alias dạng gemini-flash-latest như trước: alias để Google
+     đổi model phía sau và đổi cả giá mà code không hay biết.
 
+     Dùng nhóm flash-LITE chứ không phải flash thường, lý do là quota free tier. Đo 2026-11-06:
+     mọi model gemini-3.x-flash (3.8 / 3.6 / 3.5) chỉ cho 20 request MỖI NGÀY mỗi model
+     (quotaId GenerateRequestsPerDayPerProjectPerModel-FreeTier, quotaValue 20) — hết thì phải
+     chờ tới nửa đêm giờ Pacific (15:00 giờ VN). 20 lượt/ngày thì không chạy nổi web bán hàng
+     công khai. Nhóm flash-lite thì không gặp hạn mức ngày đó: đẩy liên tiếp 57 request vào
+     3.1-lite vẫn 200 OK, còn 3.5-lite chỉ chạm hạn mức THEO PHÚT
+     (GenerateRequestsPerMinutePerProjectPerModel-FreeTier, hồi lại sau 28s) — thứ mà khách
+     thật gần như không bao giờ chạm tới. Lite cũng rẻ hơn nếu sau này bật thanh toán:
+     $0.30/$2.50 so với $0.75/$3.75 mỗi 1M token. */
+  const primaryModel = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
+  /* Bản lite liền trước, cùng quota ngày thoải mái. Đo trên đúng prompt này thì chất lượng
+     tương đương: gọi đúng tên mùi hương, báo đúng giá 115/155/199k, biết Mộc Trầm đang là
+     "đặt trước" và tự đề xuất Bạch Trà thay thế. Để sẵn đường lùi vì lỗi hay gặp nhất của
+     lite là 429 theo phút và 503 "high demand" — cả hai đều chỉ dính một model, đổi model là
+     qua. Còn hơn để khách rơi về 6 câu regex của fallbackAnswer(). */
+  const backupModel = process.env.GEMINI_MODEL_FALLBACK || "gemini-3.1-flash-lite";
+
+  const prompt = systemPrompt();
+  /* 10s cho lượt đầu. Trước đây để 3s là để bắt nhanh cái 503 của 3.8-flash, nhưng lite thì
+     trả lời thật chứ không 503, nên 3s sẽ cắt oan ngay giữa câu trả lời đang chạy: đo được
+     lite thường xong trong 1.4–2.6s nhưng có lần mất 9.2s. Lượt hai nới ra 20s vì hết đường
+     rồi: trượt nữa là khách nhận 6 câu regex của fallbackAnswer(). */
+  let upstream = await callGemini(primaryModel, apiKey, prompt, messages, 10000);
+  if (backupModel !== primaryModel && (!upstream || RETRYABLE.has(upstream.status))) {
+    console.warn(`[chat] ${primaryModel} truot (${upstream ? upstream.status : "timeout/mang"}), thu ${backupModel}`);
+    upstream = await callGemini(backupModel, apiKey, prompt, messages, 20000);
+  }
+
+  /* Log khi phải rơi về regex. Không có dòng này thì chatbot hỏng kiểu "im lặng": khách vẫn
+     thấy Lumi trả lời tử tế nên không ai báo lỗi, mà thực ra đang là 6 câu viết cứng. Web
+     chạy mấy tuần bằng fallback mà không ai biết chính vì chỗ này trước đây không log gì. */
   if (!upstream?.ok || !upstream.body) {
-    console.error("Gemini error", upstream?.status, await upstream?.text().catch(() => ""));
+    console.warn(`[chat] ca 2 model deu truot (${upstream ? upstream.status : "timeout/mang"}) -> dung fallbackAnswer`);
     return textStream(fallbackAnswer(messages[messages.length - 1].content));
   }
 
-  // Chuyển SSE của Gemini thành luồng văn bản thuần cho client
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
   let buffer = "";
@@ -91,6 +172,10 @@ export async function POST(req: Request) {
           try {
             const json = JSON.parse(line.slice(5).trim());
             const parts: { text?: string; thought?: boolean }[] = json.candidates?.[0]?.content?.parts ?? [];
+            /* Lọc p.thought: nhóm flash-lite đang dùng không trả part suy luận, nhưng cứ giữ
+               bộ lọc vì GEMINI_MODEL là biến môi trường — đổi sang model flash thường (mặc
+               định suy luận mức medium) là phần suy luận lọt thẳng ra, khách sẽ thấy AI tự
+               lẩm bẩm trước khi trả lời. */
             const text = parts.filter((p) => !p.thought).map((p) => p.text ?? "").join("");
             if (text) controller.enqueue(encoder.encode(text));
           } catch {}
@@ -105,27 +190,28 @@ function textStream(text: string) {
   return new Response(text, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
 }
 
-/** Tư vấn theo từ khoá khi chưa cấu hình GEMINI_API_KEY (hoặc API lỗi) */
+/** Trả lời dự phòng chuẩn theo bộ 4 mùa khi chưa có API Key */
 function fallbackAnswer(q: string): string {
   const s = q.toLowerCase().normalize("NFC");
-  const rules: [RegExp, string[], string][] = [
-    [/ngủ|mất ngủ|khó ngủ|thư giãn|stress|căng thẳng|mệt/, ["oai-huong-da-lat", "mua-rung-nhiet-doi"], "Để thả lỏng và ngủ ngon hơn"],
-    [/làm việc|học|tập trung|deadline|văn phòng|tỉnh táo/, ["tra-xanh-bac-ha", "sa-chanh-rung"], "Cho góc làm việc cần sự tỉnh táo"],
-    [/quà|tặng|mẹ|bạn gái|người yêu|sinh nhật|valentine|8\/3|20\/10/, ["hoa-buoi-thang-hai", "nhai-sen-ho-tay", "vani-dua-non"], "Làm quà tặng thì mình rất thích"],
-    [/ngọt|vani|ấm|mưa|lạnh|giáng sinh|noel|tết/, ["cam-que-tet-ve", "vani-dua-non"], "Nếu bạn thích cảm giác ấm áp, ngọt ngào"],
-    [/gỗ|trầm|thiền|yoga|nam|bố/, ["go-dan-huong", "mua-rung-nhiet-doi"], "Với hương gỗ trầm ấm, vững chãi"],
-    [/tươi|mát|chanh|sả|bếp|khử mùi|ẩm/, ["sa-chanh-rung", "hoa-buoi-thang-hai"], "Để không gian luôn tươi mát, sạch mùi"],
-    [/hoa|nhài|sen|bưởi|nữ tính|dịu/, ["hoa-buoi-thang-hai", "nhai-sen-ho-tay"], "Nếu bạn mê hương hoa dịu dàng"],
-  ];
-  if (/an toàn|dầu ăn|mùi dầu|độc|khói|làm từ|tái chế/.test(s)) {
-    return "Bạn yên tâm nhé 🌿 Dầu ăn cũ được Luvia **lọc cặn, khử mùi, tẩy màu** kỹ rồi mới phối với sáp thực vật và hương liệu an toàn. Nến **không còn mùi dầu**, dùng bấc cotton không chì nên cháy sạch, ít khói. Bạn muốn mình gợi ý mùi hương nào để thử không?";
+
+  if (/xuân|mới|khởi đầu|tươi|dọn phòng/.test(s)) {
+    return "Theo sở thích bạn vừa chia sẻ, mình gợi ý [[season:xuan]]. Mùi này mang cảm xúc **Nhẹ nhàng · Tươi mới**, rất hợp cho khởi đầu ngày mới. Bạn muốn xem sản phẩm hay chọn thêm mẫu hộp?";
   }
-  for (const [re, slugs, intro] of rules) {
-    if (re.test(s)) {
-      const list = slugs.map((x) => `[[${x}]]`).join(", ");
-      return `${intro}, bạn thử ${list} nhé ✨ Mỗi hũ Classic 200g cháy được khoảng **40–45 giờ**. Nếu muốn thử trước, bạn chọn size Mini 100g cho tiết kiệm. Bạn còn muốn mình tư vấn thêm điều gì không? 🕯️`;
-    }
+  if (/hạ|nắng|năng lượng|vui|sôi nổi/.test(s)) {
+    return "Theo sở thích bạn vừa chia sẻ, mình gợi ý [[season:ha]]. Mùi này mang cảm xúc **Rực rỡ · Tươi vui**, mang chút nắng ấm áp vào không gian quen thuộc. Bạn muốn xem sản phẩm hay chọn thêm mẫu hộp?";
   }
-  const best = PRODUCTS.filter((p) => p.badge === "Bán chạy" || p.badge === "Thuần Việt").map((p) => `[[${p.slug}]]`);
-  return `Mình gợi ý bạn hai mùi được yêu thích nhất: ${best.join(" và ")} 💛 Kể mình nghe thêm bạn định thắp nến ở đâu (phòng ngủ, góc làm việc…) và thích mùi tươi mát, hoa cỏ hay ngọt ấm để mình chọn chuẩn hơn nhé!`;
+  if (/thu|dịu|ấm|sách|nghỉ ngơi|chậm|thư giãn|ngủ/.test(s)) {
+    return "Theo sở thích bạn vừa chia sẻ, mình gợi ý [[season:thu]]. Mùi này mang cảm xúc **Dịu dàng · Ấm áp**, rất thích hợp khi bạn muốn mở một cuốn sách và dành thời gian cho riêng mình. Bạn muốn xem sản phẩm hay chọn thêm mẫu hộp?";
+  }
+  if (/đông|sâu|lạnh|tĩnh|riêng tư|bình yên/.test(s)) {
+    return "Theo sở thích bạn vừa chia sẻ, mình gợi ý [[season:dong]]. Mùi này mang cảm xúc **Bình yên · Sâu lắng**, giúp giữ một chút ấm áp ở bên để ngày dài khép lại thật nhẹ. Bạn muốn xem sản phẩm hay chọn thêm mẫu hộp?";
+  }
+  if (/quà|tặng|mẹ|bạn/.test(s)) {
+    return "Để làm quà tặng ấm áp, mình gợi ý [[season:thu]] (dịu dàng) hoặc [[season:xuan]] (tươi mới). Ngay trên trang sản phẩm, bạn có thể chọn thêm **hộp quà có thiệp** để viết lời nhắn riêng nhé!";
+  }
+  if (/dầu|an toàn|khói|mùi dầu/.test(s)) {
+    return "Trong định hướng của Luvia, dầu ăn đã qua sử dụng cần được xử lý kỹ lưỡng trước khi phối trộn thành nến nhằm đảm bảo không còn mùi dầu cũ. Bạn muốn thử mùa hương nào trước không?";
+  }
+
+  return "Chào bạn, mình là Lumi! Bạn thích một không gian tươi mới, rực rỡ nhiều năng lượng, hay dịu dàng ấm áp để mình gợi ý mùa hương phù hợp nhất nhé?";
 }

@@ -1,34 +1,33 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import ShopClient from "./ShopClient";
-import { MOODS, FAMILIES, type Mood, type ScentFamily } from "@/lib/products";
+import AskLumiLink from "@/components/AskLumiLink";
+import SeasonCard from "@/components/SeasonCard";
+import { SEASONS } from "@/lib/catalog";
+import { COLLECTION } from "@/content/vi";
 
-export const metadata: Metadata = { title: "Cửa hàng nến thơm" };
+export const metadata: Metadata = { title: COLLECTION.title };
 
-// Đọc bộ lọc từ URL (?mood=…&family=…) — phải nằm trong <Suspense> vì cacheComponents
-async function ShopWithFilters({ searchParams }: { searchParams: PageProps<"/san-pham">["searchParams"] }) {
-  const sp = await searchParams;
-  const mood = typeof sp.mood === "string" && sp.mood in MOODS ? (sp.mood as Mood) : null;
-  const family = typeof sp.family === "string" && sp.family in FAMILIES ? (sp.family as ScentFamily) : null;
-  return <ShopClient key={`${mood}-${family}`} initialMood={mood} initialFamily={family} />;
-}
-
-export default function ShopPage({ searchParams }: PageProps<"/san-pham">) {
+export default function ShopPage() {
   return (
-    <>
-      <section className="paper border-b border-leaf/10">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-          <span className="brush-tag text-lg">Cửa hàng</span>
-          <h1 className="mt-4 text-4xl font-extrabold sm:text-5xl">Nến thơm Luvia</h1>
-          <p className="mt-3 max-w-2xl text-ink-soft">
-            9 mùi hương lấy cảm hứng từ thiên nhiên và ký ức Việt. Mỗi hũ được làm thủ công từ dầu ăn tái chế, sáp thực vật
-            và bấc cotton.
-          </p>
+    <div className="w-full px-margin-mobile py-space-xl sm:px-margin">
+      <div className="mx-auto flex max-w-7xl flex-col gap-space-xl">
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-space-sm text-center">
+          <span className="text-label-md font-bold uppercase tracking-widest text-primary">
+            {COLLECTION.eyebrow}
+          </span>
+          <h1 className="text-headline-lg-mobile text-on-surface sm:text-headline-lg">{COLLECTION.title}</h1>
+          <p className="text-body-md text-on-surface-variant">{COLLECTION.lead}</p>
+          <AskLumiLink
+            label={COLLECTION.askLumi}
+            prompt="Mình đang xem bộ sưu tập bốn mùa mà phân vân quá, bạn tư vấn giúp mình với."
+          />
         </div>
-      </section>
-      <Suspense fallback={<ShopClient initialMood={null} initialFamily={null} />}>
-        <ShopWithFilters searchParams={searchParams} />
-      </Suspense>
-    </>
+
+        <div className="grid grid-cols-1 gap-gutter sm:grid-cols-2 lg:grid-cols-4">
+          {SEASONS.map((season) => (
+            <SeasonCard key={season.id} season={season} />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

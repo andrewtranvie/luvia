@@ -1,254 +1,205 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Fragment, useEffect, useRef, useState } from "react";
-import { Plus, RotateCcw, SendHorizontal } from "lucide-react";
-import CandleArt from "./CandleArt";
-import { formatVND, getProduct } from "@/lib/products";
-import { useCart } from "@/lib/cart";
-
-export interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-}
-
-const STORAGE_KEY = "luvia-chat";
-const GREETING: ChatMessage = {
-  role: "assistant",
-  content:
-    "Xin chào! Mình là **Luvia** — ngọn nến nhỏ làm từ dầu ăn tái chế 🌿✨\nBạn kể mình nghe: bạn muốn thắp nến ở đâu, vào lúc nào, hay đang tìm quà cho ai? Mình sẽ gợi ý mùi hương hợp nhất nhé!",
-};
-
-export const QUICK_PROMPTS = [
-  "Mình hay khó ngủ, nên chọn mùi nào?",
-  "Tìm quà tặng mẹ khoảng 200k",
-  "Mùi tươi mát cho góc làm việc",
-  "Nến Luvia làm từ dầu ăn có an toàn không?",
-];
-
-/** Tách đoạn văn bản theo thẻ sản phẩm [[slug]] và định dạng **đậm** */
-function renderContent(text: string) {
-  const parts = text.split(/(\[\[[a-z0-9-]+\]\])/g);
-  const products: string[] = [];
-  const nodes = parts.map((part, i) => {
-    const m = part.match(/^\[\[([a-z0-9-]+)\]\]$/);
-    if (m) {
-      const p = getProduct(m[1]);
-      if (!p) return null;
-      if (!products.includes(p.slug)) products.push(p.slug);
-      return (
-        <Link key={i} href={`/san-pham/${p.slug}`} className="font-semibold text-leaf underline decoration-flame/60 underline-offset-2">
-          {p.name}
-        </Link>
-      );
-    }
-    return (
-      <Fragment key={i}>
-        {part.split(/(\*\*[^*]+\*\*)/g).map((s, j) =>
-          s.startsWith("**") && s.endsWith("**") ? <strong key={j}>{s.slice(2, -2)}</strong> : s,
-        )}
-      </Fragment>
-    );
-  });
-  return { nodes, products };
-}
-
-function ProductChip({ slug }: { slug: string }) {
-  const { add } = useCart();
-  const [added, setAdded] = useState(false);
-  const p = getProduct(slug);
-  if (!p) return null;
-  return (
-    <div className="flex items-center gap-3 rounded-2xl bg-white p-2 pr-3 ring-1 ring-leaf/15">
-      <Link href={`/san-pham/${p.slug}`} className="size-14 shrink-0 rounded-xl" style={{ background: p.wax }}>
-        <CandleArt product={p} className="size-14 p-1" lit={false} />
-      </Link>
-      <div className="min-w-0 flex-1">
-        <Link href={`/san-pham/${p.slug}`} className="block truncate text-sm font-semibold hover:text-leaf">
-          {p.name}
-        </Link>
-        <p className="text-xs text-ink-soft">{formatVND(p.price)} · 200g</p>
-      </div>
-      <button
-        onClick={() => {
-          add(p.slug, "classic");
-          setAdded(true);
-        }}
-        className="flex items-center gap-1 rounded-full bg-leaf px-3 py-1.5 text-xs font-semibold text-white hover:bg-flame"
-      >
-        {added ? "Đã thêm ✓" : <><Plus className="size-3.5" /> Giỏ</>}
-      </button>
-    </div>
-  );
-}
+import { SendHorizontal, RotateCcw, Phone } from "lucide-react";
+import { useChat, parseMessage, type ChatContext } from "@/lib/chat";
+import { COLLECTION, LUMI, STOCK_STATUS } from "@/content/vi";
+import { formatVND } from "@/lib/pricing";
+import { SITE } from "@/lib/site";
+import { useTheme } from "@/lib/themeContext";
 
 export default function ChatPanel({
   initialPrompt,
+  context,
   onPromptConsumed,
   className = "",
 }: {
   initialPrompt?: string | null;
+  context?: ChatContext;
   onPromptConsumed?: () => void;
   className?: string;
 }) {
-  const [messages, setMessages] = useState<ChatMessage[]>([GREETING]);
+  const { messages, loading, send, reset, streamingIndex, isFresh, quickReplies } = useChat({
+    initialPrompt,
+    context,
+    onPromptConsumed,
+  });
+
+  const { is3D } = useTheme();
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const loaded = useRef(false);
 
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(STORAGE_KEY);
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- restore chat history once
-      if (raw) setMessages(JSON.parse(raw));
-    } catch {}
-    loaded.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (loaded.current && !loading) {
-      try {
-        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-30)));
-      } catch {}
-    }
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
-  async function send(text: string) {
-    const content = text.trim();
-    if (!content || loading) return;
-    const next: ChatMessage[] = [...messages, { role: "user", content }];
-    setMessages([...next, { role: "assistant", content: "" }]);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || loading) return;
+    const text = input;
     setInput("");
-    setLoading(true);
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.filter((m) => m !== GREETING).slice(-16) }),
-      });
-      if (!res.ok || !res.body) throw new Error(await res.text());
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let acc = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        acc += decoder.decode(value, { stream: true });
-        setMessages([...next, { role: "assistant", content: acc }]);
-      }
-      if (!acc.trim()) throw new Error("empty");
-    } catch {
-      setMessages([
-        ...next,
-        {
-          role: "assistant",
-          content: "Ôi, ngọn lửa của mình vừa chập chờn một chút 🕯️ Bạn thử gửi lại giúp mình nhé!",
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Câu hỏi được truyền từ nút "Hỏi Luvia" ở nơi khác trên trang
-  useEffect(() => {
-    if (initialPrompt) {
-      onPromptConsumed?.();
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- forward external prompt into chat
-      void send(initialPrompt);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialPrompt]);
-
-  const reset = () => {
-    setMessages([GREETING]);
-    try {
-      sessionStorage.removeItem(STORAGE_KEY);
-    } catch {}
+    void send(text);
   };
 
   return (
-    <div className={`flex min-h-0 flex-col ${className}`}>
-      <div ref={scrollRef} className="paper flex-1 space-y-4 overflow-y-auto p-4" aria-live="polite">
+    // `min-h-0`: thẻ này là flex item (flex-1) nên mặc định min-height:auto, nó sẽ phình
+    // theo chiều cao nội dung thay vì co lại — hậu quả là vùng tin nhắn không cuộn được
+    // và ô nhập bị đẩy ra ngoài khung chat.
+    <div className={`flex min-h-0 flex-col bg-cream ${className}`}>
+      {/* Messages area */}
+      <div ref={scrollRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-4 text-xs sm:text-sm">
         {messages.map((m, i) => {
-          if (m.role === "user")
-            return (
-              <div key={i} className="flex justify-end">
-                <p className="max-w-[85%] whitespace-pre-wrap rounded-3xl rounded-br-md bg-leaf px-4 py-2.5 text-sm text-white">
-                  {m.content}
-                </p>
-              </div>
-            );
-          const { nodes, products } = renderContent(m.content);
+          const isUser = m.role === "user";
+          const isStreaming = i === streamingIndex;
+          const parsed = !isUser && !isStreaming ? parseMessage(m.content) : null;
+
           return (
-            <div key={i} className="flex gap-2.5">
-              <Image src="/brand/exp-happy.jpg" alt="" width={36} height={36} className="size-9 shrink-0 rounded-full object-cover ring-2 ring-white" />
-              <div className="max-w-[85%] space-y-2">
-                <div className="whitespace-pre-wrap rounded-3xl rounded-tl-md bg-white px-4 py-2.5 text-sm leading-relaxed shadow-sm ring-1 ring-leaf/10">
-                  {m.content ? nodes : (
-                    <span className="flex gap-1 py-1.5" aria-label="Luvia đang trả lời">
-                      <span className="size-2 animate-bounce rounded-full bg-flame" />
-                      <span className="size-2 animate-bounce rounded-full bg-flame [animation-delay:120ms]" />
-                      <span className="size-2 animate-bounce rounded-full bg-flame [animation-delay:240ms]" />
-                    </span>
-                  )}
-                </div>
-                {!(loading && i === messages.length - 1) && products.slice(0, 3).map((s) => <ProductChip key={s} slug={s} />)}
+            <div key={i} className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}>
+              {/* Bubble */}
+              <div
+                className={`max-w-[85%] rounded-2xl px-4 py-3 leading-relaxed ${
+                  isUser
+                    ? `rounded-br-xs text-white font-medium ${
+                        is3D ? "clay-bubble-leaf" : "bg-leaf shadow-xs"
+                      }`
+                    : `rounded-bl-xs text-ink ${
+                        is3D ? "clay-bubble" : "bg-white ring-1 ring-leaf/10 shadow-xs"
+                      }`
+                }`}
+              >
+                {isUser ? (
+                  <span>{m.content}</span>
+                ) : isStreaming ? (
+                  <span>{m.content || <span className="animate-pulse">Đang suy nghĩ...</span>}</span>
+                ) : parsed ? (
+                  <div>
+                    {parsed.segments.map((seg, idx) => {
+                      if (seg.type === "bold") {
+                        return <strong key={idx} className="font-bold text-leaf-dark">{seg.text}</strong>;
+                      }
+                      if (seg.type === "season") {
+                        return (
+                          <span key={idx} className="font-semibold text-leaf">
+                            {seg.season.fullName}
+                          </span>
+                        );
+                      }
+                      if (seg.type === "handoff") {
+                        return null;
+                      }
+                      return <span key={idx}>{seg.text}</span>;
+                    })}
+                  </div>
+                ) : (
+                  <span>{m.content}</span>
+                )}
               </div>
+
+              {/* Thẻ sản phẩm nhúng trong chat */}
+              {parsed && parsed.seasonCards.length > 0 && (
+                <div className="mt-2.5 w-full max-w-[90%] space-y-2">
+                  {parsed.seasonCards.map((season) => (
+                    <div
+                      key={season.id}
+                      className={`rounded-2xl p-3 ${
+                        is3D ? "clay-card !rounded-2xl" : "border border-leaf/15 bg-white shadow-xs"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="font-bold text-xs sm:text-sm text-ink">{season.fullName}</p>
+                          <p className="text-[11px] text-ink-soft">
+                            {COLLECTION.labels.highlight}: {season.highlights[0]}
+                          </p>
+                          <div className="mt-1 flex items-center gap-2 text-xs">
+                            <span className="font-bold text-leaf-dark">{formatVND(season.price)}</span>
+                            <span className="text-[10px] text-ink-soft/70">·</span>
+                            <span className="text-[11px] text-leaf font-medium">
+                              {STOCK_STATUS[season.status]}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-2.5 pt-2 border-t border-leaf/10">
+                        <Link
+                          href={`/san-pham/${season.id}`}
+                          className="block w-full rounded-full bg-leaf py-1.5 text-center text-xs font-bold text-white hover:bg-leaf-dark transition"
+                        >
+                          {LUMI.card.viewProduct}
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Nút Handoff: Nhắn đội ngũ Luvia */}
+              {parsed && parsed.handoff && (
+                <div className="mt-2 flex">
+                  {/* Chuyển cho người thật: gọi hotline — chưa có kênh chat nào được khách chốt */}
+                  <a
+                    href={SITE.hotlineHref}
+                    className={`inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white transition ${
+                      is3D ? "clay-btn-leaf" : "rounded-full bg-leaf shadow-sm hover:bg-leaf-dark"
+                    }`}
+                  >
+                    <Phone className="size-3.5" />
+                    {LUMI.handoffButton} · {SITE.hotline}
+                  </a>
+                </div>
+              )}
             </div>
           );
         })}
-
-        {messages.length <= 1 && (
-          <div className="flex flex-wrap gap-2 pl-11">
-            {QUICK_PROMPTS.map((q) => (
-              <button
-                key={q}
-                onClick={() => send(q)}
-                className="rounded-full border border-leaf/30 bg-white px-3 py-1.5 text-left text-xs font-medium text-leaf-dark transition hover:bg-leaf hover:text-white"
-              >
-                {q}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          send(input);
-        }}
-        className="flex items-center gap-2 border-t border-leaf/10 bg-white p-3"
-      >
-        <button
-          type="button"
-          onClick={reset}
-          className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft hover:bg-cream"
-          aria-label="Bắt đầu cuộc trò chuyện mới"
-          title="Trò chuyện mới"
-        >
-          <RotateCcw className="size-4" />
-        </button>
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Hỏi Luvia về mùi hương…"
-          maxLength={500}
-          className="min-w-0 flex-1 rounded-full bg-cream px-4 py-2.5 text-sm outline-none ring-leaf/40 focus:ring-2"
-          aria-label="Nhập tin nhắn"
-        />
-        <button
-          type="submit"
-          disabled={loading || !input.trim()}
-          className="grid size-10 shrink-0 place-items-center rounded-full bg-leaf text-white transition hover:bg-flame disabled:opacity-40"
-          aria-label="Gửi"
-        >
-          <SendHorizontal className="size-4" />
-        </button>
+      {/* Gợi ý bấm nhanh */}
+      {isFresh && (
+        <div className="flex shrink-0 flex-wrap gap-1.5 px-3 py-2 border-t border-leaf/10 bg-white">
+          {quickReplies.map((reply) => (
+            <button
+              key={reply}
+              type="button"
+              onClick={() => void send(reply)}
+              className="rounded-full bg-cream px-3 py-1 text-[11px] font-medium text-ink hover:bg-leaf-soft hover:text-leaf-dark transition ring-1 ring-leaf/10"
+            >
+              {reply}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Input box */}
+      <form onSubmit={handleSubmit} className="shrink-0 border-t border-leaf/10 bg-white p-3">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={reset}
+            className="grid size-9 shrink-0 place-items-center rounded-full text-ink-soft hover:bg-cream hover:text-ink transition"
+            title="Bắt đầu lại hội thoại"
+          >
+            <RotateCcw className="size-4" />
+          </button>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={LUMI.inputPlaceholder}
+            disabled={loading}
+            className="flex-1 rounded-full border border-leaf/20 bg-cream/40 px-4 py-2 text-xs sm:text-sm text-ink placeholder:text-ink-soft/70 focus:bg-white focus:outline-leaf"
+          />
+          <button
+            type="submit"
+            disabled={!input.trim() || loading}
+            className={`grid size-9 shrink-0 place-items-center rounded-full text-white disabled:opacity-40 transition ${
+              is3D ? "clay-btn-leaf" : "bg-leaf shadow hover:bg-leaf-dark"
+            }`}
+            aria-label="Gửi tin nhắn"
+          >
+            <SendHorizontal className="size-4" />
+          </button>
+        </div>
       </form>
     </div>
   );

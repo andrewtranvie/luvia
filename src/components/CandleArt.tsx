@@ -1,4 +1,13 @@
-import type { Product } from "@/lib/products";
+/** Dữ liệu tối thiểu để vẽ một hũ nến (dùng được cho cả mùa có sẵn và nến tùy chỉnh) */
+export interface CandleLook {
+  /** Mã dùng cho id gradient trong SVG — phải khác nhau giữa các hũ trên cùng trang */
+  slug: string;
+  name: string;
+  /** Màu sáp */
+  wax: string;
+  /** Màu viền nhãn */
+  accent: string;
+}
 
 /** Minh hoạ hũ nến Luvia theo màu sáp / nhãn của từng sản phẩm */
 export default function CandleArt({
@@ -6,7 +15,7 @@ export default function CandleArt({
   className = "",
   lit = true,
 }: {
-  product: Pick<Product, "slug" | "name" | "wax" | "accent">;
+  product: CandleLook;
   className?: string;
   lit?: boolean;
 }) {

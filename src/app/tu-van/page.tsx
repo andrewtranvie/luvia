@@ -5,9 +5,10 @@ import ChatPanel from "@/components/ChatPanel";
 import { SectionTitle } from "@/components/ui";
 
 export const metadata = {
-  title: "Trợ lý AI tư vấn mùi hương Bé Nến Luvia",
+  /* Layout gốc đã nối " · Luvia" qua title.template nên đừng ghi "Luvia" ở đây nữa */
+  title: "Lumi · AI tư vấn mùi hương",
   description:
-    "Trò chuyện với Bé Nến Luvia để nhận gợi ý mùi hương hoàn hảo cho tâm trạng, diện tích phòng và nhu cầu thư giãn của bạn.",
+    "Trò chuyện với Lumi để nhận gợi ý mùi hương phù hợp với tâm trạng, diện tích phòng và nhu cầu thư giãn của bạn.",
 };
 
 export default function ConsultationPage() {
@@ -18,10 +19,10 @@ export default function ConsultationPage() {
           <Sparkles className="size-4 text-flame" /> Luvia Scent Sommelier AI
         </div>
         <h1 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
-          Trợ lý mùi hương Bé Nến Luvia
+          Lumi, trợ lý mùi hương của Luvia
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-ink-soft">
-          Được huấn luyện dựa trên thư viện mùi hương và tâm trạng trị liệu của Luvia. Kể cho Bé Nến nghe tâm trạng của bạn hôm nay nhé!
+          Được huấn luyện dựa trên thư viện mùi hương và tâm trạng trị liệu của Luvia. Kể cho Lumi nghe tâm trạng của bạn hôm nay nhé!
         </p>
       </div>
 
@@ -29,14 +30,14 @@ export default function ConsultationPage() {
         <div className="bg-leaf px-6 py-4 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Image
-              src="/brand/exp-happy.jpg"
-              alt="Bé Nến Luvia"
+              src="/brand/lumi-chat.jpg"
+              alt="Lumi"
               width={40}
               height={40}
               className="size-10 rounded-full object-cover ring-2 ring-white/30"
             />
             <div>
-              <p className="font-bold text-sm">Bé Nến Luvia 🌿</p>
+              <p className="font-bold text-sm">Lumi 🌿</p>
               <p className="text-xs text-white/80">Đang trực tuyến · Sẵn sàng chọn mùi cùng bạn</p>
             </div>
           </div>

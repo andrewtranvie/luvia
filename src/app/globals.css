@@ -1,5 +1,118 @@
 @import "tailwindcss";
 
+/* ============================================================
+   DESIGN TOKENS STITCH — chép nguyên từ tailwind.config trong
+   các file code.html xuất ra từ Google Stitch. Đây là nguồn
+   chuẩn cho giao diện; mọi màn phải dùng bộ token này.
+   ============================================================ */
+@theme {
+  --color-surface: #f0ffdb;
+  --color-surface-bright: #f0ffdb;
+  --color-surface-dim: #d0dfbd;
+  --color-surface-variant: #d9e8c5;
+  --color-surface-tint: #3c691c;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #eaf9d6;
+  --color-surface-container: #e4f3d0;
+  --color-surface-container-high: #dfedcb;
+  --color-surface-container-highest: #d9e8c5;
+  --color-background: #f0ffdb;
+  --color-on-background: #141f09;
+  --color-on-surface: #141f09;
+  --color-on-surface-variant: #42493c;
+  --color-inverse-surface: #28341c;
+  --color-inverse-on-surface: #e7f6d3;
+
+  --color-primary: #3c691c;
+  --color-primary-container: #548333;
+  --color-primary-fixed: #bcf294;
+  --color-primary-fixed-dim: #a1d57b;
+  --color-inverse-primary: #a1d57b;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #010600;
+  --color-on-primary-fixed: #0a2000;
+  --color-on-primary-fixed-variant: #255103;
+
+  --color-secondary: #835400;
+  --color-secondary-container: #fdb244;
+  --color-secondary-fixed: #ffddb5;
+  --color-secondary-fixed-dim: #ffb956;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #6e4600;
+  --color-on-secondary-fixed: #2a1800;
+  --color-on-secondary-fixed-variant: #633f00;
+
+  --color-tertiary: #924b11;
+  --color-tertiary-container: #b06329;
+  --color-tertiary-fixed: #ffdcc7;
+  --color-tertiary-fixed-dim: #ffb787;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #ffffff;
+  --color-on-tertiary-fixed: #311300;
+  --color-on-tertiary-fixed-variant: #723600;
+
+  --color-outline: #73796a;
+  --color-outline-variant: #c2c9b8;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  /* Thang khoảng cách Stitch */
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2.5rem;
+  --spacing-margin: 2rem;
+  --spacing-margin-mobile: 1rem;
+  --spacing-gutter: 1.25rem;
+  --spacing-gutter-mobile: 0.75rem;
+
+  /* Bo góc Stitch — đặt tên riêng để không đè rounded-lg/xl mặc định */
+  --radius-clay: 1rem;
+  --radius-clay-lg: 2rem;
+  --radius-clay-xl: 3rem;
+
+  /* Thang chữ Stitch */
+  --text-headline-xl: 40px;
+  --text-headline-xl--line-height: 52px;
+  --text-headline-xl--font-weight: 800;
+  --text-headline-xl-mobile: 30px;
+  --text-headline-xl-mobile--line-height: 38px;
+  --text-headline-xl-mobile--font-weight: 800;
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 42px;
+  --text-headline-lg--font-weight: 700;
+  --text-headline-lg-mobile: 24px;
+  --text-headline-lg-mobile--line-height: 32px;
+  --text-headline-lg-mobile--font-weight: 700;
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--font-weight: 700;
+  --text-headline-sm: 20px;
+  --text-headline-sm--line-height: 28px;
+  --text-headline-sm--font-weight: 600;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-lg--font-weight: 400;
+  --text-body-md: 15px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+  --text-body-sm: 13px;
+  --text-body-sm--line-height: 20px;
+  --text-body-sm--font-weight: 400;
+  --text-label-lg: 15px;
+  --text-label-lg--line-height: 22px;
+  --text-label-lg--font-weight: 600;
+  --text-label-md: 13px;
+  --text-label-md--line-height: 18px;
+  --text-label-md--font-weight: 600;
+  --text-label-sm: 11px;
+  --text-label-sm--line-height: 16px;
+  --text-label-sm--font-weight: 700;
+}
+
 @theme {
   --color-cream: #fbf4e1;
   --color-cream-light: #fffcf3;
@@ -72,13 +185,60 @@ html {
 }
 
 body {
-  background: var(--color-cream);
-  color: var(--color-ink);
+  background: var(--color-surface);
+  color: var(--color-on-surface);
 }
 
 ::selection {
-  background: var(--color-leaf-light);
-  color: white;
+  background: var(--color-secondary-fixed);
+  color: var(--color-on-secondary-fixed);
+}
+
+/* ------------------------------------------------------------
+   Bóng đổ claymorphism của Stitch — gom lại thành utility để
+   markup không phải lặp chuỗi shadow-[...] dài.
+   ------------------------------------------------------------ */
+.clay-raise {
+  box-shadow:
+    inset 2px 2px 4px rgba(255, 255, 255, 0.9),
+    0 12px 28px -6px rgba(46, 58, 34, 0.08),
+    0 4px 12px -2px rgba(242, 169, 59, 0.06);
+}
+.clay-raise-sm {
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.8), 0 2px 8px rgba(46, 58, 34, 0.05);
+}
+.clay-inset {
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.9);
+}
+.clay-press {
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.4),
+    0 6px 16px rgba(84, 131, 51, 0.28);
+}
+.clay-press-lg {
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.45),
+    0 8px 20px rgba(84, 131, 51, 0.28);
+}
+
+/* Material Symbols — Stitch dùng icon font này cho toàn bộ icon */
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "opsz" 24, "wght" 400, "FILL" 0, "GRAD" 0;
+}
+.material-symbols-outlined.fill {
+  font-variation-settings: "FILL" 1;
 }
 
 .paper {
@@ -140,14 +300,30 @@ body {
 }
 
 .clay-card {
-  background: #fffdf7;
+  background: var(--color-surface-container-lowest);
+  border-radius: 2rem;
+  box-shadow:
+    inset 2px 2px 4px rgba(255, 255, 255, 0.9),
+    0 12px 28px -6px rgba(46, 58, 34, 0.08),
+    0 4px 12px -2px rgba(242, 169, 59, 0.06);
+}
+
+/* Ở chế độ craft, .clay-card trở về thẻ viền mảnh — nhờ vậy các trang server component
+   (không gọi được useTheme) vẫn dùng được class này mà đúng cả hai chủ đề. */
+html[data-style="craft"] .clay-card {
+  background: white;
+  box-shadow: none;
+  border: 1px solid rgba(84, 131, 51, 0.1);
+}
+
+.clay-card-dark {
   border-radius: 28px;
-  box-shadow: 
-    0 16px 32px -8px rgba(84, 131, 51, 0.08),
-    0 8px 16px -4px rgba(46, 58, 34, 0.06),
-    inset 0 2px 4px rgba(255, 255, 255, 0.8),
-    inset 0 -2px 4px rgba(46, 58, 34, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 16px 32px -8px rgba(46, 58, 34, 0.35),
+    0 8px 16px -4px rgba(46, 58, 34, 0.25),
+    inset 0 2px 4px rgba(255, 255, 255, 0.12),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .clay-btn-leaf {
@@ -218,25 +394,7 @@ body {
    BẢN 2: 3D CLAYMORPHISM & PIXAR LIGHTING TRANSFORMATION
    ============================================================ */
 html[data-style="clay3d"] body {
-  background: radial-gradient(circle at 50% 12%, #fffdf8 0%, #fbf4e1 50%, #f3e6c2 100%) !important;
-  background-attachment: fixed !important;
-}
-
-/* 3D Clay Cards */
-html[data-style="clay3d"] .card-interactive,
-html[data-style="clay3d"] article,
-html[data-style="clay3d"] .bg-white.rounded-\[28px\],
-html[data-style="clay3d"] .bg-white.rounded-\[32px\],
-html[data-style="clay3d"] .bg-white.rounded-\[40px\] {
-  background: #fffdf9 !important;
-  border-radius: 32px !important;
-  box-shadow: 
-    0 20px 40px -10px rgba(84, 131, 51, 0.12),
-    0 10px 20px -5px rgba(46, 58, 34, 0.08),
-    inset 0 2px 4px rgba(255, 255, 255, 0.95),
-    inset 0 -3px 5px rgba(46, 58, 34, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.75) !important;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  background: var(--color-surface) !important;
 }
 
 html[data-style="clay3d"] .card-interactive:hover {
@@ -284,11 +442,131 @@ html[data-style="clay3d"] .bg-flame-soft.rounded-full {
     inset 0 -3px 6px rgba(0, 0, 0, 0.18) !important;
 }
 
-/* 3D Header Nav */
-html[data-style="clay3d"] header {
-  background: rgba(255, 253, 247, 0.92) !important;
-  backdrop-filter: blur(20px) !important;
-  box-shadow: 0 10px 30px -10px rgba(46, 58, 34, 0.12) !important;
+/* 3D Form Inputs */
+html[data-style="clay3d"] input:not([type="radio"]):not([type="checkbox"]),
+html[data-style="clay3d"] textarea,
+html[data-style="clay3d"] select {
+  background: var(--color-surface-container-low) !important;
+  box-shadow: inset 2px 2px 5px rgba(46, 58, 34, 0.1), inset -1px -1px 2px rgba(255, 255, 255, 0.5) !important;
+  border: 1px solid rgba(46, 58, 34, 0.06) !important;
+  transition: box-shadow 0.2s ease, background 0.2s ease !important;
+}
+
+html[data-style="clay3d"] input:not([type="radio"]):not([type="checkbox"]):focus,
+html[data-style="clay3d"] textarea:focus,
+html[data-style="clay3d"] select:focus {
+  background: var(--color-cream-light) !important;
+  box-shadow: 0 0 0 3px rgba(84, 131, 51, 0.25), inset 1px 1px 3px rgba(46, 58, 34, 0.06) !important;
+  outline: none !important;
+}
+
+/* 3D Selection Controls (radio/checkbox "clay bead") */
+html[data-style="clay3d"] input[type="radio"],
+html[data-style="clay3d"] input[type="checkbox"] {
+  accent-color: var(--color-leaf);
+  box-shadow: 0 2px 6px -1px rgba(46, 58, 34, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+}
+
+html[data-style="clay3d"] input[type="radio"] {
+  border-radius: 9999px;
+}
+
+html[data-style="clay3d"] input[type="radio"]:checked,
+html[data-style="clay3d"] input[type="checkbox"]:checked {
+  box-shadow: 0 0 0 3px rgba(84, 131, 51, 0.22), 0 2px 6px -1px rgba(46, 58, 34, 0.25);
+}
+
+/* Seasonal chips */
+html[data-style="clay3d"] .season-chip-xuan,
+html[data-style="clay3d"] .season-chip-ha,
+html[data-style="clay3d"] .season-chip-thu,
+html[data-style="clay3d"] .season-chip-dong {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.7);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+html[data-style="clay3d"] .season-chip-xuan { background: rgba(141, 181, 96, 0.16); color: #4f6b35; }
+html[data-style="clay3d"] .season-chip-ha { background: rgba(242, 169, 59, 0.18); color: #8a5a12; }
+html[data-style="clay3d"] .season-chip-thu { background: rgba(201, 119, 59, 0.16); color: #7a4a24; }
+html[data-style="clay3d"] .season-chip-dong { background: rgba(107, 127, 166, 0.18); color: #3f4d6e; }
+
+html[data-style="clay3d"] .season-chip-xuan.is-active,
+html[data-style="clay3d"] .season-chip-ha.is-active,
+html[data-style="clay3d"] .season-chip-thu.is-active,
+html[data-style="clay3d"] .season-chip-dong.is-active {
+  box-shadow: inset 2px 2px 4px rgba(46, 58, 34, 0.12), inset -1px -1px 2px rgba(255, 255, 255, 0.6);
+  transform: scale(0.98);
+}
+
+/* Floating Mascot Assistant button (Lumi) */
+html[data-style="clay3d"] .clay-mascot-fab {
+  width: 60px;
+  height: 60px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #f7b44d 0%, #e18218 100%);
+  box-shadow:
+    0 8px 24px -2px rgba(242, 169, 59, 0.45),
+    inset 0 2px 4px rgba(255, 255, 255, 0.5),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.15);
+  animation: var(--animate-pulse-glow);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html[data-style="clay3d"] .clay-mascot-fab:hover {
+  transform: translateY(-3px) scale(1.04);
+}
+
+html[data-style="clay3d"] .clay-mascot-fab:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+/* Cửa sổ chat — nền đục hẳn, KHÔNG blur. Bản trong mờ 85% trước đây để chữ của trang
+   phía sau hiện xuyên qua, lẫn vào chữ trong khung chat nên đọc rất rối. */
+html[data-style="clay3d"] .clay-glass-panel {
+  background: #fffdf7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow:
+    0 20px 40px -10px rgba(46, 58, 34, 0.14),
+    0 8px 16px -4px rgba(242, 169, 59, 0.08),
+    inset 0 2px 4px rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Bong bóng chat Lumi — khối đất sét nhẹ, không viền cứng */
+html[data-style="clay3d"] .clay-bubble {
+  background: #fffdf7;
+  box-shadow:
+    0 8px 18px -6px rgba(46, 58, 34, 0.12),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 4px rgba(46, 58, 34, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+html[data-style="clay3d"] .clay-bubble-leaf {
+  background: linear-gradient(135deg, #5c9237 0%, #467029 100%);
+  box-shadow:
+    0 8px 18px -6px rgba(84, 131, 51, 0.35),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.18);
+}
+
+/* Press/active squash for pill buttons in clay3d */
+html[data-style="clay3d"] button.rounded-full:active,
+html[data-style="clay3d"] a.rounded-full:active {
+  transform: translateY(2px) scale(0.98);
+}
+
+/* Pebble badge (asymmetric radius for season identifiers) */
+html[data-style="clay3d"] .pebble-badge {
+  border-radius: 32px 16px 32px 16px !important;
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.7), 0 4px 10px -2px rgba(46, 58, 34, 0.12) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,64 +1,157 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Music2, Phone } from "lucide-react";
 import Logo from "./Logo";
+import { FOOTER, NAV, CLOSING } from "@/content/vi";
+import { SITE } from "@/lib/site";
+
+/** lucide-react không còn icon thương hiệu nên vẽ chữ "f" của Facebook trực tiếp */
+function FacebookGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className="mt-0.5 size-4 shrink-0 text-flame">
+      <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.25 10.44 22v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.77-3.91 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.45 2.91h-2.33V22C18.34 21.25 22 17.08 22 12.06Z" />
+    </svg>
+  );
+}
 
 export default function Footer() {
   return (
-    <footer className="mt-24 bg-leaf-dark text-white/85">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="mt-20 bg-leaf-dark text-white/90">
+      {/* 9 Lời mời cuối trang */}
+      <div className="border-b border-white/10 bg-leaf-dark/60 py-12">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+          <h2 className="text-2xl font-extrabold sm:text-3xl text-white">
+            {CLOSING.title}
+          </h2>
+          <p className="mt-3 text-sm sm:text-base text-white/80">
+            {CLOSING.body}
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link
+              href={CLOSING.primary.href}
+              className="rounded-full bg-white px-6 py-2.5 text-xs font-bold text-leaf-dark shadow hover:bg-cream transition"
+            >
+              {CLOSING.primary.label}
+            </Link>
+            <Link
+              href={CLOSING.secondary.href}
+              className="rounded-full bg-white/15 px-6 py-2.5 text-xs font-bold text-white hover:bg-white/25 transition ring-1 ring-white/20"
+            >
+              {CLOSING.secondary.label}
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
+        {/* Cột 1: Thương hiệu */}
         <div>
           <div className="inline-block rounded-2xl bg-cream px-4 py-3">
             <Logo />
           </div>
-          <p className="mt-4 text-sm leading-relaxed text-white/75">
-            Mỗi ngọn nến Luvia được làm thủ công từ dầu ăn đã qua sử dụng, lọc sạch và tái sinh thành ánh sáng
-            ấm áp cho ngôi nhà của bạn.
+          <p className="mt-4 text-sm font-semibold text-white">
+            {FOOTER.tagline}
           </p>
-          <p className="mt-3 font-hand text-lg text-flame">Lan tỏa ánh sáng xanh ♡</p>
+          <p className="mt-2 text-xs leading-relaxed text-white/75">
+            {FOOTER.description}
+          </p>
         </div>
 
+        {/* Cột 2: Điều hướng */}
         <div>
-          <h3 className="font-semibold text-white">Mua sắm</h3>
-          <ul className="mt-4 space-y-2.5 text-sm">
-            <li><Link className="hover:text-flame" href="/san-pham">Tất cả sản phẩm</Link></li>
-            <li><Link className="hover:text-flame" href="/san-pham?mood=ngu-ngon">Nến cho giấc ngủ</Link></li>
-            <li><Link className="hover:text-flame" href="/san-pham?mood=lang-man">Quà tặng</Link></li>
-            <li><Link className="hover:text-flame" href="/tu-van">Tư vấn mùi hương AI</Link></li>
-            <li><Link className="hover:text-flame" href="/gio-hang">Giỏ hàng</Link></li>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-white">Khám phá</h3>
+          <ul className="mt-4 space-y-2.5 text-xs sm:text-sm">
+            {NAV.menu.map((m) => (
+              <li key={m.href}>
+                <Link className="hover:text-flame transition" href={m.href}>
+                  {m.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
+        {/* Cột 3: Chính sách & Hướng dẫn */}
         <div>
-          <h3 className="font-semibold text-white">Luvia</h3>
-          <ul className="mt-4 space-y-2.5 text-sm">
-            <li><Link className="hover:text-flame" href="/cau-chuyen">Câu chuyện thương hiệu</Link></li>
-            <li><Link className="hover:text-flame" href="/cau-chuyen#quy-trinh">Quy trình tái chế</Link></li>
-            <li><Link className="hover:text-flame" href="/doi-ngu">Đội ngũ sáng lập (Bên B)</Link></li>
-            <li><Link className="hover:text-flame" href="/demo-3d">Concept 3D (Stitch Demo)</Link></li>
-            <li><Link className="hover:text-flame" href="/lien-he#doi-dau">Chương trình đổi dầu ăn</Link></li>
-            <li><Link className="hover:text-flame" href="/lien-he#faq">Câu hỏi thường gặp</Link></li>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-white">Chính sách & Hỗ trợ</h3>
+          <ul className="mt-4 space-y-2.5 text-xs sm:text-sm text-white/80">
+            {FOOTER.pendingLinks.map((link) => (
+              <li key={link}>
+                <span className="hover:text-white transition cursor-default">
+                  {link} <span className="text-[10px] text-white/50">(Đang cập nhật)</span>
+                </span>
+              </li>
+            ))}
           </ul>
         </div>
 
+        {/* Cột 4: Thông tin liên hệ */}
         <div>
-          <h3 className="font-semibold text-white">Liên hệ</h3>
-          <ul className="mt-4 space-y-3 text-sm">
-            <li className="flex gap-2"><MapPin className="mt-0.5 size-4 shrink-0" /> Hà Nội, Việt Nam</li>
-            <li className="flex gap-2"><Phone className="mt-0.5 size-4 shrink-0" /> 0900 000 000</li>
-            <li className="flex gap-2"><Mail className="mt-0.5 size-4 shrink-0" /> hello@luvia.vn</li>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-white">Thông tin liên hệ</h3>
+          <ul className="mt-4 space-y-3 text-xs sm:text-sm">
+            <li className="flex gap-2">
+              <Phone className="mt-0.5 size-4 shrink-0 text-flame" />
+              <div>
+                <p className="text-[11px] text-white/60">{FOOTER.hotlineLabel}:</p>
+                <a href={`tel:${SITE.hotline.replace(/\s+/g, "")}`} className="font-semibold hover:underline">
+                  {SITE.hotline}
+                </a>
+              </div>
+            </li>
+            <li className="flex gap-2">
+              <Mail className="mt-0.5 size-4 shrink-0 text-flame" />
+              <div>
+                <p className="text-[11px] text-white/60">{FOOTER.emailLabel}:</p>
+                <a href={`mailto:${SITE.email}`} className="font-semibold hover:underline">
+                  {SITE.email}
+                </a>
+              </div>
+            </li>
+            {SITE.links.fanpage && (
+              <li className="flex gap-2">
+                <FacebookGlyph />
+                <div>
+                  <p className="text-[11px] text-white/60">Fanpage:</p>
+                  <a
+                    href={SITE.links.fanpage}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="font-semibold hover:underline"
+                  >
+                    Luvia trên Facebook
+                  </a>
+                </div>
+              </li>
+            )}
+            {SITE.links.tiktok && (
+              <li className="flex gap-2">
+                <Music2 className="mt-0.5 size-4 shrink-0 text-flame" />
+                <div>
+                  <p className="text-[11px] text-white/60">TikTok:</p>
+                  <a
+                    href={SITE.links.tiktok}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="font-semibold hover:underline"
+                  >
+                    @luvia.com204
+                  </a>
+                </div>
+              </li>
+            )}
+            <li className="flex gap-2">
+              <MapPin className="mt-0.5 size-4 shrink-0 text-flame" />
+              <div>
+                <p className="text-[11px] text-white/60">{FOOTER.addressLabel}:</p>
+                <p className="leading-relaxed text-white/85">{SITE.address}</p>
+                <p className="mt-1 text-[10px] text-white/50 italic">(Địa chỉ theo hồ sơ dự án)</p>
+              </div>
+            </li>
           </ul>
-          <div className="mt-5 flex gap-3">
-            <a href="#" aria-label="Facebook" className="grid size-10 place-items-center rounded-full bg-white/10 hover:bg-flame">
-              <svg viewBox="0 0 24 24" className="size-4" fill="currentColor"><path d="M14 8h3V4h-3c-2.8 0-4 1.7-4 4.3V11H7v4h3v9h4v-9h3l1-4h-4V8.6c0-.4.3-.6.6-.6Z" /></svg>
-            </a>
-            <a href="#" aria-label="Instagram" className="grid size-10 place-items-center rounded-full bg-white/10 hover:bg-flame">
-              <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" /></svg>
-            </a>
-          </div>
         </div>
       </div>
+
       <div className="border-t border-white/10 py-5 text-center text-xs text-white/60">
-        © 2026 Luvia. Không chỉ là một ngọn nến — mà là hành trình vì một tương lai xanh hơn.
+        © 2026 Luvia · Nến thơm tái chế nâng cấp từ dầu ăn đã qua sử dụng.
       </div>
     </footer>
   );
