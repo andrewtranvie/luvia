@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# bộ công cụ kiểm giao diện ở máy (có cả profile Chrome tạm) — không thuộc mã nguồn
+/.taste-skill/

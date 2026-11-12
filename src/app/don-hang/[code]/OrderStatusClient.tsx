@@ -3,10 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AlertCircle, CheckCircle2, Clock, RefreshCw, Truck } from "lucide-react";
+import { AlertCircle, Check, CheckCircle2, Clock, Copy, RefreshCw, Truck } from "lucide-react";
 import { useOrderStatus } from "@/lib/checkout";
 import { formatVND } from "@/lib/pricing";
-import { BANK_TRANSFER_DEADLINE_MINUTES } from "@/lib/site";
+import { BANK_TRANSFER_DEADLINE_MINUTES, SITE } from "@/lib/site";
 import { useTheme } from "@/lib/themeContext";
 import { CHECKOUT, CLOSING, ORDER_STATUS, fill } from "@/content/vi";
 
@@ -16,6 +16,9 @@ const VIEW_ICON = {
   cod: Truck,
   failed: AlertCircle,
 } as const;
+
+/** Câu nhắc nhắn biên lai, cắt tại {phone} để chèn số hotline thành liên kết bấm gọi được */
+const CONFIRM_HINT = ORDER_STATUS.confirmHint.split("{phone}");
 
 export default function OrderStatusClient({ code }: { code: string }) {
   const s = useOrderStatus(code);
@@ -30,6 +33,20 @@ export default function OrderStatusClient({ code }: { code: string }) {
   // (VietQR không có hạn thật), đơn hàng cũng không bị đụng tới.
   const [renewedAt, setRenewedAt] = useState<number | null>(null);
   const counting = s.view === "awaiting_payment" && Boolean(s.order?.transfer);
+
+  // Sao chép số tài khoản / nội dung chuyển khoản. Khách xem web trên điện thoại thì
+  // không thể quét mã QR đang hiện trên chính máy đó, phải dán tay vào app ngân hàng.
+  const [copied, setCopied] = useState<"account" | "content" | null>(null);
+
+  const copy = async (field: "account" | "content", value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(field);
+      setTimeout(() => setCopied(null), 1800);
+    } catch {
+      /* Trình duyệt chặn clipboard (ngữ cảnh không bảo mật) → khách vẫn đọc & gõ tay được */
+    }
+  };
 
   useEffect(() => {
     if (!counting) return;
@@ -175,7 +192,25 @@ export default function OrderStatusClient({ code }: { code: string }) {
               </div>
               <div className="flex justify-between gap-4">
                 <dt className="text-ink-soft">Số tài khoản</dt>
-                <dd className="text-right font-mono font-medium text-ink">{transfer.account || "Đang cập nhật"}</dd>
+                <dd className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => void copy("account", transfer.account)}
+                    disabled={!transfer.account}
+                    title={ORDER_STATUS.copy}
+                    className="inline-flex items-center gap-1.5 font-mono font-medium text-ink transition hover:text-leaf disabled:hover:text-ink"
+                  >
+                    {transfer.account || "Đang cập nhật"}
+                    {copied === "account" ? (
+                      <Check className="size-3.5 shrink-0 text-leaf" />
+                    ) : (
+                      <Copy className="size-3.5 shrink-0 text-ink-soft/60" />
+                    )}
+                  </button>
+                  {copied === "account" && (
+                    <span className="ml-1 text-[11px] font-semibold text-leaf">{ORDER_STATUS.copied}</span>
+                  )}
+                </dd>
               </div>
               <div className="flex justify-between gap-4">
                 <dt className="text-ink-soft">Chủ tài khoản</dt>
@@ -187,12 +222,39 @@ export default function OrderStatusClient({ code }: { code: string }) {
               </div>
               <div className="flex justify-between gap-4">
                 <dt className="text-ink-soft">{ORDER_STATUS.labels.transferContent}</dt>
-                <dd className="text-right font-mono font-bold text-ink">{transfer.content}</dd>
+                <dd className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => void copy("content", transfer.content)}
+                    title={ORDER_STATUS.copy}
+                    className="inline-flex items-center gap-1.5 font-mono font-bold text-ink transition hover:text-leaf"
+                  >
+                    {transfer.content}
+                    {copied === "content" ? (
+                      <Check className="size-3.5 shrink-0 text-leaf" />
+                    ) : (
+                      <Copy className="size-3.5 shrink-0 text-ink-soft/60" />
+                    )}
+                  </button>
+                  {copied === "content" && (
+                    <span className="ml-1 text-[11px] font-semibold text-leaf">{ORDER_STATUS.copied}</span>
+                  )}
+                </dd>
               </div>
               {/* Hạn thanh toán nay là đồng hồ đếm ngược ngay dưới mã QR — in ngày giờ
                   đầy đủ cho một mốc chỉ cách 5 phút thì vừa thừa vừa khó đọc. */}
             </dl>
           </div>
+
+          {/* Chưa có webhook ngân hàng nào báo về web, cũng chưa có nơi nhận đơn: nếu khách
+              không nhắn lại thì shop không biết có người vừa chuyển tiền. */}
+          <p className="mt-5 border-t border-leaf/10 pt-4 text-xs leading-relaxed text-ink-soft">
+            {CONFIRM_HINT[0]}
+            <a href={SITE.hotlineHref} className="font-bold text-leaf-dark hover:underline">
+              {SITE.hotline}
+            </a>
+            {CONFIRM_HINT[1]}
+          </p>
         </div>
       )}
 

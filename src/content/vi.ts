@@ -491,6 +491,14 @@ export const ORDER_STATUS = {
   countdown: "Mã QR còn hiệu lực {time}",
   expired: "Mã QR đã hết hạn. Bạn bấm tạo mã mới để tiếp tục nhé.",
   regenerate: "Tạo mã mới",
+  /* ⚠️ ba câu do tôi viết 2026-11-12, chờ khách duyệt.
+     Nút sao chép có vì khách mở web bằng điện thoại thì không tự quét được mã QR
+     trên màn hình máy đó — họ phải dán số tài khoản và nội dung vào app ngân hàng.
+     confirmHint: web chưa có cách nào tự biết khách đã chuyển tiền, nên phải nhờ
+     khách nhắn lại, nếu không đơn sẽ không ai xác nhận. */
+  copy: "Sao chép",
+  copied: "Đã sao chép",
+  confirmHint: "Chuyển khoản xong, bạn nhắn mã đơn kèm ảnh biên lai tới {phone} để Luvia xác nhận và gửi hàng nhé.",
   viewOrder: "Xem chi tiết đơn hàng",
   continue: "Tiếp tục khám phá",
   notFound: "Không tìm thấy đơn hàng. Bạn kiểm tra lại mã đơn và số điện thoại giúp mình nhé.",
