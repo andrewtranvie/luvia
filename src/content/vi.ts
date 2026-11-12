@@ -56,7 +56,17 @@ export const STOCK_STATUS = {
 
 export const SALES_CLOSED_LABEL = "Sắp mở bán";
 
-/** Nội dung riêng của từng mùa (thẻ sản phẩm + trang chi tiết) */
+/**
+ * Nội dung riêng của từng mùa (thẻ sản phẩm + trang chi tiết).
+ *
+ * ⚠️ `description` của cả 4 mùa do tôi viết lại 2026-11-12 theo góp ý nhóm khách
+ * ("muốn có cái mô tả bình thường"): bản cũ là một câu dài bay bổng, bản mới gói trong
+ * hai câu — mùi gì, cảm giác gì, hợp không gian nào. Chất liệu lấy từ dòng đầu mục
+ * "ĐẶC ĐIỂM NỔI BẬT" trên tem nhãn và danh sách tinh dầu trong catalog.ts, không thêm
+ * thông tin mới: nốt hương chi tiết (đầu / giữa / cuối) khách vẫn chưa cung cấp.
+ * `suggestion` giữ nguyên — đó là phần "hợp với người thế nào", cũng là chất liệu
+ * Lumi dùng để giải thích vì sao gợi ý một mùa.
+ */
 export const SEASON_COPY = {
   xuan: {
     season: "Xuân",
@@ -66,7 +76,7 @@ export const SEASON_COPY = {
     headline: "Khi những khởi đầu mới khẽ gõ cửa",
     mood: "Hồi sinh · Tươi mới · Hy vọng",
     description:
-      "Ban Mai mang theo cảm giác tươi mát, trong trẻo của làn gió sớm, gợi nhớ khoảnh khắc vạn vật dần thức giấc sau giấc ngủ đông. Không quá vội vàng, cũng chẳng cần rực rỡ.",
+      "Hương tươi mát, sảng khoái như làn gió sớm. Nhẹ và trong, hợp phòng khách hoặc bàn làm việc khi bạn muốn không gian tỉnh táo hơn.",
     suggestion:
       "Dành cho những ngày bạn muốn làm mới không gian, mở một bản nhạc yêu thích và tận hưởng niềm vui từ những điều giản dị.",
     cta: "Chọn Ban Mai",
@@ -79,7 +89,7 @@ export const SEASON_COPY = {
     headline: "Một chút mộng mơ giữa ngày hạ",
     mood: "Trong sáng · Nữ tính · Lãng mạn",
     description:
-      "Liên Hương lấy cảm hứng từ vẻ đẹp thanh khiết của hoa sen, mang theo chút nữ tính, mềm mại và mơ mộng — như nét dịu dàng, trong trẻo của những rung động đầu tiên.",
+      "Hương hoa sen thanh tao, dịu nhẹ từ tinh dầu sen hồng. Cảm giác bình yên, thư thái, hợp phòng ngủ hoặc một góc thư giãn cuối ngày.",
     suggestion:
       "Dành cho một buổi chiều thảnh thơi, trong không gian ngập hoa, bên chiếc bồn tắm ấm và ly thức uống yêu thích.",
     cta: "Chọn Liên Hương",
@@ -92,7 +102,7 @@ export const SEASON_COPY = {
     headline: "Có một mùa thu dịu dàng đến thế",
     mood: "Thanh tao · Dịu dàng · Hoài niệm",
     description:
-      "Bạch Trà gợi lên cảm giác thanh tao, dịu nhẹ và một chút ấm áp giữa những ngày trời chuyển lạnh: những bông hoa trắng bên khung cửa, những tán phong đỏ nơi phương xa.",
+      "Hương trà trắng thanh khiết, nhẹ nhàng, có chút gỗ tuyết tùng ấm phía sau. Dễ chịu và không gắt, hợp phòng ngủ hay phòng làm việc cỡ vừa.",
     suggestion:
       "Dành cho những tâm hồn yêu sự bình yên, thích những buổi chiều không cần lịch trình và trân trọng cả những khoảnh khắc rất đỗi bình thường.",
     cta: "Chọn Bạch Trà",
@@ -105,7 +115,7 @@ export const SEASON_COPY = {
     headline: "Mùa đông có một nơi để trở về",
     mood: "Sâu lắng · Sum vầy · Chở che",
     description:
-      "Mộc Trầm mang cảm giác ấm áp, sâu lắng từ hương gỗ tuyết tùng, gợi nhớ những ngôi nhà gỗ bình yên giữa mùa đông. Một chút hoài niệm, một chút trầm tư, nhưng không hề cô đơn.",
+      "Hương trầm hương và gỗ tuyết tùng, ấm áp và trầm lắng. Đằm hơn ba mùa còn lại, hợp phòng khách hoặc không gian rộng vào buổi tối.",
     suggestion:
       "Dành cho những buổi tối bạn muốn tạm gác lại bộn bề, cuộn mình trong chiếc chăn ấm và tận hưởng không gian thân thuộc.",
     cta: "Chọn Mộc Trầm",
@@ -119,7 +129,22 @@ export const LUMI = {
   greeting:
     "Chào bạn, mình là Lumi, trợ lý AI tư vấn mùi của Luvia. Bạn đang chọn nến cho mình hay làm quà? Kể mình nghe một chút nhé.",
   inputPlaceholder: "Bạn thích mùi như thế nào?",
-  quickReplies: ["Chọn cho mình", "Chọn làm quà", "Mình chưa biết chọn mùi"],
+  /* ⚠️ nhãn do tôi viết 2026-11-12, chờ khách duyệt.
+     Bộ cũ ("Chọn cho mình" / "Chọn làm quà" / "Mình chưa biết chọn mùi") đều quá mơ hồ:
+     bấm xong Lumi vẫn phải hỏi lại hai ba lượt mới chọn được mùi. Bộ mới nói thẳng
+     hoàn cảnh dùng — mỗi nút là một câu Lumi trả lời được ngay bằng một mùi cụ thể. */
+  quickReplies: [
+    "Mình muốn dễ ngủ hơn",
+    "Để phòng làm việc cho tỉnh táo",
+    "Thư giãn sau ngày dài",
+    "Tả người mình muốn tặng",
+    "Mùi nào nhẹ nhàng nhất?",
+    "Nến làm từ dầu ăn cũ à?",
+  ],
+  /* Nút gợi ý lượt sau — hiện sau mỗi câu trả lời của Lumi. Trước đây bộ nút chỉ hiện ở
+     tin nhắn đầu rồi biến mất, đúng lúc khách bí nhất là lúc không còn gì để bấm. */
+  followUps: ["So sánh giúp mình hai mùi", "Còn mùi nào khác không?", "Mùi này hợp phòng bao nhiêu m²?"],
+  followUpsLabel: "Hỏi tiếp:",
   card: {
     viewProduct: "Xem sản phẩm",
   },
@@ -132,6 +157,60 @@ export const LUMI = {
   error: "Lumi đang gặp chút trục trặc. Bạn thử gửi lại giúp mình, hoặc nhắn đội ngũ Luvia nhé.",
   rateLimited: "Bạn đang hỏi hơi nhanh, Lumi xin nghỉ một chút. Bạn thử lại sau ít phút nhé.",
   askAboutProduct: "Hỏi Lumi về mùi này",
+} as const;
+
+/**
+ * Ô "tả người nhận → Lumi gợi ý mùi" ở /qua-tang và /tu-van.
+ * Dựng theo góp ý nhóm khách 2026-11-12: khách chỉ muốn tả vài nét tính cách
+ * người được tặng rồi nhận một gợi ý kèm lý do, không muốn trả lời bảng câu hỏi.
+ * ⚠️ toàn bộ nhãn và chip dưới đây do tôi viết, chờ khách duyệt.
+ */
+export const GIFT_FINDER = {
+  eyebrow: "GỢI Ý QUÀ",
+  title: "Tặng ai? Tả vài câu, Lumi chọn giúp.",
+  lead: "Người ấy thích gì, hay làm gì lúc rảnh, phòng của họ ra sao — càng cụ thể Lumi càng gợi ý trúng.",
+  placeholder: "Ví dụ: chị mình hướng nội, hay đọc sách buổi tối, phòng ngủ nhỏ...",
+  chipsLabel: "Hoặc bấm nhanh vài nét tính cách:",
+  chips: [
+    "hướng nội",
+    "thích đọc sách",
+    "bận rộn, hay căng thẳng",
+    "yêu thiên nhiên",
+    "lãng mạn, mơ mộng",
+    "thích sự tối giản",
+    "hay thức khuya",
+    "vừa chuyển nhà",
+  ],
+  submit: "Gợi ý mùi cho người này",
+  empty: "Bạn tả giúp mình vài nét về người nhận nhé.",
+  /** Câu gửi vào Lumi. {desc} = phần khách gõ. Ép Lumi nêu lý do ngay trong câu hỏi. */
+  prompt:
+    "Mình muốn chọn nến Luvia làm quà. Người nhận: {desc}. " +
+    "Bạn gợi ý giúp mình MỘT mùi thôi, và nói rõ vì sao mùi đó hợp với người này nhé.",
+} as const;
+
+/**
+ * Nguồn sự thật duy nhất về dầu ăn tái chế — nuôi system prompt của Lumi,
+ * fallbackAnswer() và mục FAQ. Trước đây nội dung này nằm rải rác hơn mười chỗ,
+ * không chỗ nào dùng chung, nên Lumi chỉ biết đúng hai câu chung chung.
+ *
+ * ⚠️ `facts` chỉ GOM LẠI những gì đã có trên web từ tài liệu khách gửi
+ * (trang Câu chuyện + infographic "Một hũ nến Luvia được tạo ra như thế nào?"),
+ * không thêm thông số mới. `unknowns` là những thứ khách CHƯA cung cấp —
+ * Lumi phải nói thẳng là chưa công bố chứ không được suy đoán.
+ * Cả khối chờ khách duyệt.
+ */
+export const RECYCLED_OIL = {
+  why: "Một lít dầu ăn đổ xuống cống có thể tạo thành lớp màng ngăn oxy trên mặt nước, gây ô nhiễm cho một lượng nước rất lớn và làm tắc nghẽn hệ thống thoát nước. Ở nhiều gia đình Việt, dầu sau khi chiên rán thường bị đổ bỏ hoặc dùng đi dùng lại — cả hai đều không tốt.",
+  facts: [
+    "Dầu ăn đã qua sử dụng được thu gom và lọc kỹ trước khi đưa vào sản xuất.",
+    "Dầu đã qua xử lý được đun nóng và hòa trộn với sáp thực vật thành hỗn hợp sáp mịn, ổn định.",
+    "Sau đó mới cho tinh dầu thiên nhiên theo bốn hương đặc trưng, rót vào hũ thủy tinh đã đặt bấc, để nguội rồi kiểm tra chất lượng và dán nhãn.",
+    "Mục tiêu của Luvia là giảm lượng dầu thải đổ ra nguồn nước, đồng thời cho dầu đã qua sử dụng một vòng đời mới.",
+  ],
+  /** Những câu hỏi Lumi KHÔNG được tự trả lời — chưa có số liệu nào được khách công bố. */
+  unknowns:
+    "tỉ lệ dầu tái chế trong một hũ nến, phương pháp và nhiệt độ khử mùi cụ thể, kết quả kiểm nghiệm, chứng nhận chất lượng",
 } as const;
 
 export const MASCOT_BANNER = {
@@ -440,9 +519,24 @@ export const FAQ = {
       a: "Không. Trong định hướng phát triển của Luvia, dầu cần được xử lý trước khi phối trộn thành nến. Chất lượng thành phẩm còn phụ thuộc vào công thức, nguyên liệu và quá trình kiểm tra thực tế.",
     },
     {
+      // ⚠️ câu mới 2026-11-12 theo góp ý nhóm khách (thầy cô có thể vặn chỗ này), chờ khách duyệt
+      id: "faq-vi-sao-dau-tai-che",
+      q: "Vì sao Luvia chọn làm nến từ dầu ăn đã qua sử dụng?",
+      a: `${RECYCLED_OIL.why} ${RECYCLED_OIL.facts[3]}`,
+    },
+    {
+      // ⚠️ câu mới 2026-11-12, nội dung gom từ trang Câu chuyện + infographic khách gửi, chờ khách duyệt
+      id: "faq-quy-trinh-dau",
+      q: "Dầu được xử lý thế nào trước khi thành nến?",
+      a: `${RECYCLED_OIL.facts[0]} ${RECYCLED_OIL.facts[1]} ${RECYCLED_OIL.facts[2]} Các thông số chi tiết hơn (${RECYCLED_OIL.unknowns}) hiện chưa được công bố — bạn nhắn Luvia nếu cần trao đổi thêm.`,
+    },
+    {
+      // ⚠️ câu trả lời viết lại 2026-11-12: bản cũ chỉ nói "bạn có thể nhắn Luvia để tìm hiểu thêm",
+      //    tức là không trả lời gì. Bản mới nói rõ dầu được lọc rồi đun trộn với sáp trước khi
+      //    cho tinh dầu, nhưng vẫn không hứa kết quả kiểm nghiệm nào. Chờ khách duyệt.
       id: "faq-mui-dau",
       q: "Mình lo nến còn mùi dầu cũ thì sao?",
-      a: "Đây là một băn khoăn dễ hiểu khi lần đầu biết đến nến từ dầu ăn đã qua sử dụng. Bạn có thể nhắn Luvia để tìm hiểu thêm thông tin nguyên liệu và khả năng trải nghiệm mùi trước khi chọn. Việc xử lý nguyên liệu và đánh giá mùi thành phẩm là những phần cần được làm rõ cho từng sản phẩm.",
+      a: "Đây là băn khoăn dễ hiểu khi lần đầu biết đến nến từ dầu ăn đã qua sử dụng. Dầu được lọc kỹ rồi đun trộn với sáp thực vật thành hỗn hợp sáp mịn, sau đó mới cho tinh dầu thiên nhiên theo từng hương — nên mùi bạn cảm nhận khi đốt là mùi tinh dầu. Luvia chưa công bố kết quả kiểm nghiệm mùi, vì vậy nếu bạn muốn chắc chắn trước khi mua, hãy nhắn cho Luvia để trao đổi trực tiếp.",
     },
     {
       id: "faq-chon-mua",

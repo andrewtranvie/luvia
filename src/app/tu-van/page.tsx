@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, Leaf, Flame, ShieldCheck } from "lucide-react";
 import ChatPanel from "@/components/ChatPanel";
+import GiftScentFinder from "@/components/GiftScentFinder";
 import { SectionTitle } from "@/components/ui";
 
 export const metadata = {
@@ -24,6 +25,13 @@ export default function ConsultationPage() {
         <p className="mx-auto mt-3 max-w-xl text-ink-soft">
           Được huấn luyện dựa trên thư viện mùi hương và tâm trạng trị liệu của Luvia. Kể cho Lumi nghe tâm trạng của bạn hôm nay nhé!
         </p>
+      </div>
+
+      {/* Lối vào nhanh: tả người được tặng rồi để Lumi chọn — đặt trước khung chat vì trước đây
+          trang này chỉ có khung chat trắng, khách không biết nên gõ gì. variant="legacy" vì trang
+          này còn dùng hệ màu cũ (cream / leaf / ink), chưa chuyển sang clay3d như /qua-tang. */}
+      <div className="mt-10">
+        <GiftScentFinder variant="legacy" />
       </div>
 
       <div className="mt-10 overflow-hidden rounded-[40px] bg-white shadow-xl ring-1 ring-leaf/15">

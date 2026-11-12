@@ -187,6 +187,11 @@ export function useChat(opts: { initialPrompt?: string | null; context?: ChatCon
     streamingIndex: loading ? messages.length - 1 : -1,
     isFresh: messages.length <= 1,
     quickReplies: LUMI.quickReplies,
+    /* Chỉ gợi ý hỏi tiếp khi Lumi vừa trả lời xong: đang gõ dở mà hiện nút thì khách bấm
+       chồng lên câu đang chạy. Lượt đầu đã có quickReplies nên không hiện ở đó. */
+    followUps: !loading && messages.length > 1 && messages[messages.length - 1].role === "assistant"
+      ? LUMI.followUps
+      : [],
   };
 }
 

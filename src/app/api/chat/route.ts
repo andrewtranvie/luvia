@@ -1,4 +1,5 @@
 import { catalogForAI } from "@/lib/catalog";
+import { RECYCLED_OIL } from "@/content/vi";
 import { clientIp, rateLimit } from "@/lib/server/integrations";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -10,15 +11,23 @@ VỀ THƯƠNG HIỆU LUVIA:
 - Nến thơm Luvia được phát triển theo hướng tận dụng dầu ăn đã qua sử dụng sau xử lý làm một phần nguyên liệu phối trộn cùng sáp thực vật.
 - Định vị: "LUVIA — Hương thơm từ những điều tưởng chừng bỏ đi. Nến thơm tái chế nâng cấp từ dầu ăn đã qua sử dụng."
 - Bộ sưu tập chính: BỘ SƯU TẬP BỐN MÙA (Xuân – Hạ – Thu – Đông).
-- Gói quà: mỗi hũ có thể thêm hộp quà có thiệp để viết lời nhắn, chọn ngay trên trang sản phẩm.`;
+- Gói quà: mỗi hũ có thể thêm hộp quà có thiệp để viết lời nhắn, chọn ngay trên trang sản phẩm.
+
+VỀ DẦU ĂN TÁI CHẾ (khách hay hỏi, trả lời bằng đúng những điều dưới đây):
+- ${RECYCLED_OIL.why}
+${RECYCLED_OIL.facts.map((f) => `- ${f}`).join("\n")}
+- Luvia CHƯA công bố: ${RECYCLED_OIL.unknowns}.`;
 
 const SYSTEM_PROMPT_RULES = `QUY TẮC TƯ VẤN CỦA LUMI:
 - Xưng "mình", gọi khách là "bạn". Giọng thân thiện, ấm áp, ngắn gọn (dưới 100 từ).
 - Hỏi ngắn từng câu về sở thích, cảm giác mong muốn hoặc người nhận quà; KHÔNG bắt khách trả lời bảng câu hỏi dài.
 - Chỉ đề xuất 1–2 lựa chọn có trong danh mục.
 - Khi đề xuất sản phẩm, BẮT BUỘC chèn token mã dạng [[season:xuan]], [[season:ha]], [[season:thu]], hoặc [[season:dong]].
-- Mẫu câu chuẩn: "Theo sở thích bạn vừa chia sẻ, mình gợi ý [tên mùa]. Mùa này có cảm xúc [cảm xúc], phù hợp với mong muốn [sở thích của khách]. Bạn muốn xem sản phẩm hay chọn thêm mẫu hộp?"
+- Token ĐÃ LÀ tên sản phẩm: giao diện thay nó bằng tên đầy đủ khi hiển thị. Vì vậy TUYỆT ĐỐI không viết thêm tên mùa ngay cạnh token. Viết "mình gợi ý [[season:thu]]." — KHÔNG viết "[[season:thu]] — Bạch Trà", "[[season:thu]] (Bạch Trà)" hay "Nến Bạch Trà [[season:thu]]", vì khách sẽ đọc thành tên lặp hai lần.
+- Mẫu câu chuẩn: "Theo sở thích bạn vừa chia sẻ, mình gợi ý [[season:thu]]. Mùa này có cảm xúc [cảm xúc], phù hợp với mong muốn [sở thích của khách]. Bạn muốn xem sản phẩm hay chọn thêm mẫu hộp?"
 - Khi khách hỏi ngoài danh mục hoặc chưa đủ thông tin: "Mình chưa có thông tin chắc chắn về lựa chọn này. Bạn muốn chuyển sang trao đổi với đội ngũ Luvia không? [[handoff]]"
+- KHI KHÁCH TẢ NGƯỜI NHẬN QUÀ: chỉ gợi ý ĐÚNG MỘT mùi. Bắt buộc có câu lý do nối một nét cụ thể khách vừa kể với cảm xúc hoặc gợi ý sử dụng của mùa đó, theo mẫu: "Vì bạn kể [nét tính cách], mình nghĩ [[season:thu]] hợp — mùa này [cảm xúc], [gợi ý sử dụng]." Không nói chung chung kiểu "mùa này rất dễ chịu".
+- Khi khách hỏi tỉ lệ dầu tái chế, cách khử mùi cụ thể, kiểm nghiệm hay chứng nhận: nói thẳng là Luvia chưa công bố con số đó, KHÔNG suy đoán, rồi mời chuyển cho đội ngũ bằng [[handoff]].
 - Không đưa ra các tuyên bố tuyệt đối về y tế, không bịa đặt số liệu hay giấy chứng nhận chưa có kiểm nghiệm thực tế.`;
 
 /* catalogForAI() đọc SEASONS/VARIANTS/SEASON_COPY nên tên - giá - trọng lượng - tình trạng hàng
@@ -194,6 +203,35 @@ function textStream(text: string) {
 function fallbackAnswer(q: string): string {
   const s = q.toLowerCase().normalize("NFC");
 
+  /* Nhánh quà phải đứng TRƯỚC bốn nhánh mùa. Câu do ô "tả người nhận" soạn ra chứa cả chữ
+     "quà" lẫn mô tả tự do của khách, nên nếu để nhánh Xuân (có "tươi", "dọn phòng") lên trước
+     thì "em mình vừa chuyển nhà, thích đồ tươi sáng" sẽ rơi vào Xuân và mất hẳn ngữ cảnh quà. */
+  if (/quà|tặng|người nhận/.test(s)) {
+    const pick: [RegExp, string, string, string][] = [
+      [/hướng nội|đọc sách|yên tĩnh|tối giản|một mình/, "thu", "Dịu dàng · Ấm áp", "hợp một buổi tối đọc sách ở góc riêng"],
+      [/căng thẳng|bận|stress|mệt|thức khuya|khó ngủ/, "dong", "Bình yên · Sâu lắng", "hợp lúc muốn hạ nhịp lại cuối ngày"],
+      [/thiên nhiên|cây|hoa|lãng mạn|mơ mộng|nhẹ nhàng/, "ha", "Rực rỡ · Tươi vui", "hợp phòng ngủ hoặc một góc thư giãn"],
+      [/chuyển nhà|mới|tươi|năng lượng|hướng ngoại|sáng/, "xuan", "Nhẹ nhàng · Tươi mới", "hợp phòng khách hoặc bàn làm việc"],
+    ];
+    const hit = pick.find(([re]) => re.test(s));
+    if (hit) {
+      const [, slug, mood, note] = hit;
+      return `Vì bạn kể về người ấy như vậy, mình nghĩ [[season:${slug}]] hợp nhất — mùa này mang cảm xúc **${mood}**, ${note}. Trên trang sản phẩm bạn có thể thêm **hộp quà có thiệp** để viết lời nhắn riêng nhé!`;
+    }
+    return "Bạn tả thêm giúp mình một chút về người nhận nhé — người ấy thích gì, hay làm gì lúc rảnh, hay phòng của họ thế nào? Mình sẽ chọn một mùa và nói rõ vì sao chọn mùa đó.";
+  }
+
+  /* Hai nhánh dầu cũng phải đứng trước bốn nhánh mùa: nhánh Thu dò chuỗi "thu" nên câu
+     "dầu được thu gom thế nào" sẽ bị hiểu thành hỏi mùa Thu. Câu hỏi về số liệu phải nói
+     thẳng là chưa công bố rồi mời [[handoff]], đúng quy tắc đã dạy cho bản AI — nếu không
+     thì khi API hỏng Lumi lại trả lời mơ hồ như trước. */
+  if (/tỉ lệ|tỷ lệ|phần trăm|%|kiểm nghiệm|chứng nhận|nhiệt độ|khử mùi/.test(s) && /dầu|tái chế/.test(s)) {
+    return `Luvia chưa công bố con số này (${RECYCLED_OIL.unknowns}), nên mình không muốn đoán. Bạn muốn mình chuyển câu hỏi cho đội ngũ Luvia trả lời chính xác không? [[handoff]]`;
+  }
+  if (/dầu|tái chế|khói|an toàn/.test(s)) {
+    return `${RECYCLED_OIL.facts[0]} ${RECYCLED_OIL.facts[1]} Sau đó mới cho tinh dầu thiên nhiên theo từng hương, nên mùi bạn cảm nhận khi đốt là mùi tinh dầu. Bạn muốn thử mùa hương nào trước không?`;
+  }
+
   if (/xuân|mới|khởi đầu|tươi|dọn phòng/.test(s)) {
     return "Theo sở thích bạn vừa chia sẻ, mình gợi ý [[season:xuan]]. Mùi này mang cảm xúc **Nhẹ nhàng · Tươi mới**, rất hợp cho khởi đầu ngày mới. Bạn muốn xem sản phẩm hay chọn thêm mẫu hộp?";
   }
@@ -205,12 +243,6 @@ function fallbackAnswer(q: string): string {
   }
   if (/đông|sâu|lạnh|tĩnh|riêng tư|bình yên/.test(s)) {
     return "Theo sở thích bạn vừa chia sẻ, mình gợi ý [[season:dong]]. Mùi này mang cảm xúc **Bình yên · Sâu lắng**, giúp giữ một chút ấm áp ở bên để ngày dài khép lại thật nhẹ. Bạn muốn xem sản phẩm hay chọn thêm mẫu hộp?";
-  }
-  if (/quà|tặng|mẹ|bạn/.test(s)) {
-    return "Để làm quà tặng ấm áp, mình gợi ý [[season:thu]] (dịu dàng) hoặc [[season:xuan]] (tươi mới). Ngay trên trang sản phẩm, bạn có thể chọn thêm **hộp quà có thiệp** để viết lời nhắn riêng nhé!";
-  }
-  if (/dầu|an toàn|khói|mùi dầu/.test(s)) {
-    return "Trong định hướng của Luvia, dầu ăn đã qua sử dụng cần được xử lý kỹ lưỡng trước khi phối trộn thành nến nhằm đảm bảo không còn mùi dầu cũ. Bạn muốn thử mùa hương nào trước không?";
   }
 
   return "Chào bạn, mình là Lumi! Bạn thích một không gian tươi mới, rực rỡ nhiều năng lượng, hay dịu dàng ấm áp để mình gợi ý mùa hương phù hợp nhất nhé?";

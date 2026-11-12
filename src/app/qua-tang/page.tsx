@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import AskLumiLink from "@/components/AskLumiLink";
+import GiftScentFinder from "@/components/GiftScentFinder";
 import Icon from "@/components/Icon";
 import { GIFTS } from "@/content/vi";
 import B2BForm from "./B2BForm";
@@ -23,6 +24,13 @@ export default function GiftsPage() {
             <div>
               <h2 className="text-headline-md text-on-surface">{GIFTS.title}</h2>
               <p className="mt-space-sm text-body-md text-on-surface-variant">{GIFTS.body}</p>
+            </div>
+
+            {/* Ô tả người nhận — đặt trên hàng nút vì đây là lối vào khách dùng nhiều nhất
+                theo góp ý nhóm khách 2026-11-12. AskLumiLink bên dưới giữ lại làm lối tắt
+                cho người không muốn gõ. */}
+            <div className="mt-space-lg">
+              <GiftScentFinder />
             </div>
 
             <div className="mt-space-lg flex flex-wrap items-center gap-space-md">

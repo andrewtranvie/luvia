@@ -20,7 +20,7 @@ export default function ChatPanel({
   onPromptConsumed?: () => void;
   className?: string;
 }) {
-  const { messages, loading, send, reset, streamingIndex, isFresh, quickReplies } = useChat({
+  const { messages, loading, send, reset, streamingIndex, isFresh, quickReplies, followUps } = useChat({
     initialPrompt,
     context,
     onPromptConsumed,
@@ -154,15 +154,19 @@ export default function ChatPanel({
         })}
       </div>
 
-      {/* Gợi ý bấm nhanh */}
-      {isFresh && (
-        <div className="flex shrink-0 flex-wrap gap-1.5 px-3 py-2 border-t border-leaf/10 bg-white">
-          {quickReplies.map((reply) => (
+      {/* Gợi ý bấm nhanh: lượt đầu là các hoàn cảnh dùng, các lượt sau là câu hỏi tiếp.
+          `max-h` + cuộn là bắt buộc: không chặn chiều cao thì bộ 6 nút xuống 4 dòng, cao 163px
+          trên màn 390 và ăn mất vùng tin nhắn (đo được: vùng tin nhắn còn 344px thay vì 415px). */}
+      {(isFresh || followUps.length > 0) && (
+        <div className="flex max-h-24 shrink-0 flex-wrap items-center gap-1.5 overflow-y-auto border-t border-leaf/10 bg-white px-3 py-2">
+          {!isFresh && <span className="text-[10px] font-bold text-ink-soft/70">{LUMI.followUpsLabel}</span>}
+          {(isFresh ? quickReplies : followUps).map((reply) => (
             <button
               key={reply}
               type="button"
+              disabled={loading}
               onClick={() => void send(reply)}
-              className="rounded-full bg-cream px-3 py-1 text-[11px] font-medium text-ink hover:bg-leaf-soft hover:text-leaf-dark transition ring-1 ring-leaf/10"
+              className="rounded-full bg-cream px-3 py-1 text-[11px] font-medium text-ink ring-1 ring-leaf/10 transition hover:bg-leaf-soft hover:text-leaf-dark disabled:opacity-40"
             >
               {reply}
             </button>
