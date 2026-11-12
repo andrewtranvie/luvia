@@ -58,7 +58,9 @@ export default function ChatPanel({
             <div key={i} className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}>
               {/* Bubble */}
               <div
-                className={`max-w-[85%] rounded-2xl px-4 py-3 leading-relaxed ${
+                /* whitespace-pre-wrap: Lumi hay trả lời hai đoạn, không có class này thì HTML
+                   nuốt hết xuống dòng và dồn thành một khối chữ liền. */
+                className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-3 leading-relaxed ${
                   isUser
                     ? `rounded-br-xs text-white font-medium ${
                         is3D ? "clay-bubble-leaf" : "bg-leaf shadow-xs"
