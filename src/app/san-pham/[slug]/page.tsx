@@ -27,12 +27,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <nav className="mb-8 flex items-center gap-2 text-sm text-ink-soft">
-        <Link href="/san-pham" className="flex items-center gap-1 hover:text-leaf">
-          <ArrowLeft className="size-4" /> Cửa hàng
+      {/* min-h-11 = 44px, mức tối thiểu cho một vùng bấm trên điện thoại. Trước đây chỗ này
+          là chữ text-sm cao khoảng 20px, không viền không nền nên khách vừa khó bấm trúng
+          vừa không nhận ra là bấm quay lại được. */}
+      <nav className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-2 text-base">
+        <Link
+          href="/san-pham"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 font-semibold text-leaf-dark ring-1 ring-leaf/25 transition hover:bg-leaf-soft hover:ring-leaf active:scale-95"
+        >
+          <ArrowLeft className="size-5" /> Cửa hàng
         </Link>
-        <span>/</span>
-        <span className="font-medium text-ink">{SEASON_COPY[season.id].name}</span>
+        <span className="text-ink-soft/50">/</span>
+        <span className="font-bold text-ink">{SEASON_COPY[season.id].name}</span>
       </nav>
 
       {/* key = mã mùa: chuyển sang mùa khác thì dựng lại, khỏi giữ quy cách/ảnh của mùa cũ */}

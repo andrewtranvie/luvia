@@ -256,11 +256,20 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={co.submitting || !co.salesOpen}
-            className={`mt-5 flex w-full items-center justify-center gap-2 py-3.5 font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-50 ${
+            /* Trước đây nút là flex 2 cột (icon | chữ) và không có đệm trái–phải, nên với nhãn dài
+               nhất — "Đặt hàng & xem hướng dẫn chuyển khoản" — ở 390px icon bị đẩy dính sát mép
+               trái, tách hẳn khỏi khối chữ. Chuyển sang một dòng văn bản căn giữa, icon đi inline
+               ngay trước chữ, nên icon và chữ luôn là một khối. text-balance để hai dòng dài bằng
+               nhau (trước: 250px / 45px, mỗi chữ "khoản" nằm trơ một mình ở dòng dưới). */
+            className={`mt-5 block w-full px-5 py-3.5 text-center leading-snug font-bold text-balance text-white transition disabled:cursor-not-allowed disabled:opacity-50 ${
               is3D ? "clay-btn-leaf" : "rounded-full bg-leaf shadow-lg shadow-leaf/25 hover:bg-leaf-dark"
             }`}
           >
-            {co.submitting ? <Loader2 className="size-4 animate-spin" /> : <ShoppingBag className="size-4" />}
+            {co.submitting ? (
+              <Loader2 className="mr-2 inline-block size-4 animate-spin align-[-3px]" />
+            ) : (
+              <ShoppingBag className="mr-2 inline-block size-4 align-[-3px]" />
+            )}
             {co.submitLabel}
           </button>
 

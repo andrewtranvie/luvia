@@ -28,11 +28,15 @@ export default function HomePage() {
               </span>
             </div>
 
-            <h1 className="text-headline-xl-mobile leading-tight tracking-tight text-on-surface sm:text-headline-xl">
+            {/* text-balance: tiêu đề tự xuống dòng rất lệch — ở 1440 dòng trên 602px còn dòng
+                dưới chỉ 87px, mỗi chữ "bạn." nằm trơ một mình. */}
+            <h1 className="text-headline-xl-mobile leading-tight tracking-tight text-balance text-on-surface sm:text-headline-xl">
               {HERO.title}
             </h1>
 
-            <p className="max-w-xl text-body-lg text-on-surface-variant">{HERO.body}</p>
+            {/* text-pretty: đoạn dài nên không dùng text-balance (trình duyệt chỉ cân được vài
+                dòng); text-pretty chỉ lo riêng dòng cuối, tránh bỏ lại "dụng." một mình (50px). */}
+            <p className="max-w-xl text-body-lg text-pretty text-on-surface-variant">{HERO.body}</p>
 
             <div className="flex flex-wrap items-center gap-space-md pt-space-sm">
               <Link
