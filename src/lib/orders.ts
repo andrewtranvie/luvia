@@ -17,6 +17,7 @@ import {
   BANK,
   BANK_TRANSFER_DEADLINE_MINUTES,
   ENABLED_PAYMENT_METHODS,
+  FREE_SHIPPING_THRESHOLD,
   SALES_OPEN,
   SHIPPING_METHOD,
   shippingFor,
@@ -114,12 +115,24 @@ export function validateCustomer(c: CustomerInfo, opts: { agreed?: boolean } = {
 }
 
 /** Tổng tiền (client xem trước & server tính chính thức dùng chung hàm này) */
-export function computeTotals(lines: CartLine[], province: string): OrderTotals & { shippingKnown: boolean } {
+export function computeTotals(
+  lines: CartLine[],
+  province: string,
+): OrderTotals & { shippingKnown: boolean; freeShipping: boolean } {
   const subtotal = lines.reduce((s, l) => s + lineTotal(l), 0);
   const ship = shippingFor(province);
-  const shipping = lines.length && ship ? ship.fee : 0;
+  // Đơn từ FREE_SHIPPING_THRESHOLD được miễn phí giao (xem Chính sách giao hàng)
+  const freeShipping = Boolean(lines.length) && subtotal >= FREE_SHIPPING_THRESHOLD;
+  const shipping = lines.length && ship && !freeShipping ? ship.fee : 0;
   const discount = 0; // Chưa có chương trình giảm giá được xác nhận
-  return { subtotal, discount, shipping, total: subtotal - discount + shipping, shippingKnown: Boolean(ship) };
+  return {
+    subtotal,
+    discount,
+    shipping,
+    total: subtotal - discount + shipping,
+    shippingKnown: Boolean(ship),
+    freeShipping,
+  };
 }
 
 export function estimateDelivery(lines: CartLine[], province: string) {

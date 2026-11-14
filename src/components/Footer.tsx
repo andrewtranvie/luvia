@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Mail, MapPin, Music2, Phone } from "lucide-react";
 import Logo from "./Logo";
-import { FOOTER, NAV, CLOSING } from "@/content/vi";
+import { FOOTER, NAV, CLOSING, POLICIES } from "@/content/vi";
 import { SITE } from "@/lib/site";
 
 /** lucide-react không còn icon thương hiệu nên vẽ chữ "f" của Facebook trực tiếp */
@@ -74,11 +74,11 @@ export default function Footer() {
         <div>
           <h3 className="text-sm font-bold uppercase tracking-wider text-white">Chính sách & Hỗ trợ</h3>
           <ul className="mt-4 space-y-2.5 text-xs sm:text-sm text-white/80">
-            {FOOTER.pendingLinks.map((link) => (
-              <li key={link}>
-                <span className="hover:text-white transition cursor-default">
-                  {link} <span className="text-[10px] text-white/50">(Đang cập nhật)</span>
-                </span>
+            {POLICIES.docs.map((doc) => (
+              <li key={doc.slug}>
+                <Link className="hover:text-flame transition" href={`/ho-tro/${doc.slug}`}>
+                  {doc.title}
+                </Link>
               </li>
             ))}
           </ul>

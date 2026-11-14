@@ -153,8 +153,12 @@ export default function CheckoutPage() {
             <dl className="mt-4 space-y-2 text-sm">
               <div className="flex justify-between gap-4">
                 <dt className="text-ink-soft">{CHECKOUT.shipping.fee}</dt>
-                <dd className="font-medium text-ink">
-                  {co.totals.shippingKnown ? formatVND(co.totals.shipping) : CHECKOUT.shipping.chooseProvince}
+                <dd className={co.totals.freeShipping ? "font-bold text-leaf-dark" : "font-medium text-ink"}>
+                  {!co.totals.shippingKnown
+                    ? CHECKOUT.shipping.chooseProvince
+                    : co.totals.freeShipping
+                      ? CHECKOUT.totals.freeShipping
+                      : formatVND(co.totals.shipping)}
                 </dd>
               </div>
               {co.delivery.prep && (
@@ -226,8 +230,12 @@ export default function CheckoutPage() {
             </div>
             <div className="flex justify-between">
               <dt className="text-ink-soft">{CHECKOUT.totals.shipping}</dt>
-              <dd className="font-medium text-ink">
-                {co.totals.shippingKnown ? formatVND(co.totals.shipping) : "—"}
+              <dd className={co.totals.freeShipping ? "font-bold text-leaf-dark" : "font-medium text-ink"}>
+                {!co.totals.shippingKnown
+                  ? "—"
+                  : co.totals.freeShipping
+                    ? CHECKOUT.totals.freeShipping
+                    : formatVND(co.totals.shipping)}
               </dd>
             </div>
             <div className="flex items-baseline justify-between border-t border-leaf/10 pt-3">

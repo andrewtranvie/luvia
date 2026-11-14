@@ -285,7 +285,10 @@ export default function OrderStatusClient({ code }: { code: string }) {
           </div>
           <div className="flex justify-between">
             <dt className="text-ink-soft">{CHECKOUT.totals.shipping}</dt>
-            <dd className="font-medium text-ink">{formatVND(order.totals.shipping)}</dd>
+            {/* Đơn đã lưu chỉ giữ con số, nên suy ra "Miễn phí" từ phí = 0 */}
+            <dd className={order.totals.shipping === 0 ? "font-bold text-leaf-dark" : "font-medium text-ink"}>
+              {order.totals.shipping === 0 ? CHECKOUT.totals.freeShipping : formatVND(order.totals.shipping)}
+            </dd>
           </div>
           <div className="flex items-baseline justify-between border-t border-leaf/10 pt-3">
             <dt className="font-bold text-ink">{ORDER_STATUS.labels.total}</dt>

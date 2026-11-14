@@ -11,15 +11,12 @@ export const SITE = {
   hotlineHref: "tel:0372268723",
   /** Địa chỉ liên hệ theo tài liệu — KHÔNG phải cửa hàng/điểm nhận hàng */
   address: "Đại học FPT – Campus Hòa Lạc – Hà Nội",
-  /** Liên kết khách sẽ bổ sung. null = chưa có → giao diện không hiển thị */
+  /** Liên kết khách sẽ bổ sung. null = chưa có → giao diện không hiển thị.
+      4 trang chính sách nay là trang nội bộ `/ho-tro/[slug]`, xem POLICIES trong `content/vi.ts` */
   links: {
     tiktok: "https://www.tiktok.com/@luvia.com204",
     fanpage: "https://www.facebook.com/profile.php?id=61594794540816" as string | null,
     zalo: null as string | null,
-    usageGuide: null as string | null,
-    shippingPolicy: null as string | null,
-    returnPolicy: null as string | null,
-    privacyPolicy: null as string | null,
   },
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
 } as const;
@@ -46,6 +43,14 @@ export const SHIPPING_ZONES: Record<ShippingZone, { label: string; fee: number; 
 };
 
 export const SHIPPING_METHOD = { id: "standard", label: "Giao hàng tiêu chuẩn" } as const;
+
+/**
+ * Mốc miễn phí giao hàng — tính trên tạm tính (chưa gồm phí ship).
+ * ⚠️ Con số do tôi đề xuất 2026-11-13, user duyệt. Khách hàng (chủ shop) chưa chốt.
+ * Sửa ở đây PHẢI sửa cả câu trong POLICIES → "chinh-sach-giao-hang" → mục "Phí vận chuyển"
+ * ở `content/vi.ts`, nếu không chính sách và số tiền thu thật sẽ lệch nhau.
+ */
+export const FREE_SHIPPING_THRESHOLD = 500_000;
 
 /** 34 tỉnh/thành sau sắp xếp đơn vị hành chính 2025 → vùng tính phí */
 export const PROVINCES: { name: string; zone: ShippingZone }[] = [

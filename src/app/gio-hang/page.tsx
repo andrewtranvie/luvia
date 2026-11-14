@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { ArrowLeft, Minus, Plus, ShoppingBag, Trash2, Truck } from "lucide-react";
 import CandleArt from "@/components/CandleArt";
 import { getSeason } from "@/lib/catalog";
 import { MAX_QTY, describeLine, formatVND, unitPrice } from "@/lib/pricing";
 import { useShopCart } from "@/lib/shop-cart";
+import { FREE_SHIPPING_THRESHOLD } from "@/lib/site";
 import { useTheme } from "@/lib/themeContext";
-import { CART, CHECKOUT, SEASON_COPY } from "@/content/vi";
+import { CART, CHECKOUT, SEASON_COPY, fill } from "@/content/vi";
 
 /** Màu sáp/nhãn để vẽ minh hoạ: lấy theo mùa của dòng hàng, không có thì dùng màu kem mặc định */
 const look = (seasonId: string | null, title: string, key: string) => {
@@ -164,6 +165,30 @@ export default function CartPage() {
             <span className="text-2xl font-extrabold text-leaf-dark">{formatVND(cart.subtotal)}</span>
           </div>
           <p className="mt-2 text-xs text-ink-soft">{CART.shippingNote}</p>
+
+          {/* Mốc miễn phí giao hàng — thanh tiến trình để khách thấy còn thiếu bao nhiêu */}
+          {cart.subtotal >= FREE_SHIPPING_THRESHOLD ? (
+            <p className="mt-4 flex items-center gap-2 rounded-2xl bg-leaf-soft px-3.5 py-2.5 text-xs font-bold text-leaf-dark">
+              <Truck className="size-4 shrink-0" /> {CART.freeShippingReached}
+            </p>
+          ) : (
+            <div className="mt-4 rounded-2xl bg-cream px-3.5 py-2.5">
+              <p className="flex items-start gap-2 text-xs text-ink-soft">
+                <Truck className="mt-0.5 size-4 shrink-0 text-leaf" />
+                <span className="text-pretty">
+                  {fill(CART.freeShippingProgress, {
+                    amount: formatVND(FREE_SHIPPING_THRESHOLD - cart.subtotal),
+                  })}
+                </span>
+              </p>
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-leaf/15">
+                <div
+                  className="h-full rounded-full bg-leaf transition-[width] duration-300"
+                  style={{ width: `${Math.round((cart.subtotal / FREE_SHIPPING_THRESHOLD) * 100)}%` }}
+                />
+              </div>
+            </div>
+          )}
 
           <Link
             href="/dat-hang"
