@@ -22,11 +22,26 @@ export const NAV = {
 
 export const HERO = {
   eyebrow: "LUVIA · BỘ SƯU TẬP BỐN MÙA",
-  title: "Một mùa hương cho góc nhỏ của bạn.",
+  /* Tách hai vế để vế sau in nghiêng màu xanh + gạch nét cọ bên dưới.
+     Nếu sửa chữ, giữ vế đầu ngắn hơn vế sau để dòng trên không trống một nửa. */
+  title: "Một mùa hương cho",
+  titleAccent: "góc nhỏ của bạn.",
   body: "Có ngày bạn muốn căn phòng tươi mới hơn. Có ngày chỉ cần một chút ấm áp để chậm lại. Khám phá Xuân – Hạ – Thu – Đông cùng Luvia, thương hiệu nến thơm tái chế nâng cấp từ dầu ăn đã qua sử dụng.",
   primary: { label: "Mua nến bốn mùa", href: "/san-pham" },
   secondary: { label: "Quà tặng & Hợp tác", href: "/qua-tang" },
   askLumi: "Chưa biết chọn mùi? Hỏi Lumi",
+  /* Dải ba điểm tin cậy dưới hero (khối "Eco Mini Proof Points" trong bản Stitch).
+     ⚠️ ĐÂY LÀ CAM KẾT VỚI NGƯỜI MUA, không phải chữ trang trí — mọi con số phải
+     tra được từ FILE TEM NHÃN (packing.pdf khách gửi 2026-10-21).
+     Bản Stitch ghi "100% Tái chế an toàn · 40h+ · 0% Paraben & Phthalate";
+     tôi KHÔNG chép nguyên vì: 40h+ sai (tem ghi 25–30 / 36–40 / 50–54 giờ, bản
+     100 g chỉ 25 giờ), còn "0% Paraben & Phthalate" chưa có giấy xác nhận của
+     bên bán hương liệu. Khách chốt lại thì sửa ở đây. */
+  proofs: [
+    { value: "100%", label: "Sáp đậu nành tự nhiên" },
+    { value: "25–54h", label: "Thời gian cháy" },
+    { value: "Upcycle", label: "Từ dầu ăn đã qua sử dụng" },
+  ],
 } as const;
 
 export const COLLECTION = {

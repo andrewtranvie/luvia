@@ -28,10 +28,14 @@ export default function HomePage() {
               </span>
             </div>
 
-            {/* text-balance: tiêu đề tự xuống dòng rất lệch — ở 1440 dòng trên 602px còn dòng
-                dưới chỉ 87px, mỗi chữ "bạn." nằm trơ một mình. */}
-            <h1 className="text-headline-xl-mobile leading-tight tracking-tight text-balance text-on-surface sm:text-headline-xl">
-              {HERO.title}
+            {/* Hai vế xuống dòng cố định (block) thay vì để trình duyệt tự ngắt — vế nhấn
+                phải nằm trọn một dòng thì nét gạch .hero-underline mới chạy hết câu. */}
+            <h1 className="text-headline-xl-mobile leading-tight tracking-tight text-on-surface sm:text-headline-xl">
+              <span className="block">{HERO.title}</span>
+              {/* inline-block để nét gạch chỉ dài bằng câu, không kéo hết bề ngang cột */}
+              <span className="hero-underline inline-block italic text-primary-container">
+                {HERO.titleAccent}
+              </span>
             </h1>
 
             {/* text-pretty: đoạn dài nên không dùng text-balance (trình duyệt chỉ cân được vài
@@ -71,6 +75,21 @@ export default function HomePage() {
                 </span>
               </button>
             </div>
+
+            {/* Dải ba điểm tin cậy — port khối "Eco Mini Proof Points" của bản Stitch.
+                Chấm ngăn cách là trang trí nên aria-hidden; ở mobile các mục tự xuống
+                dòng, lúc đó chấm nằm đầu dòng trông lạ nên chỉ hiện từ sm trở lên. */}
+            <ul className="flex flex-wrap items-center gap-x-space-md gap-y-space-xs border-t border-outline-variant/60 pt-space-md text-label-sm text-on-surface-variant">
+              {HERO.proofs.map((p, i) => (
+                <li key={p.label} className="flex items-center gap-space-xs">
+                  {i > 0 && (
+                    <span aria-hidden className="mr-space-sm hidden size-1 rounded-full bg-outline-variant sm:block" />
+                  )}
+                  <span className="font-bold text-primary-container">{p.value}</span>
+                  <span>{p.label}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Khối 4 bệ mùa */}
