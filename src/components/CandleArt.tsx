@@ -30,40 +30,40 @@ export default function CandleArt({
           <stop offset="1" stopColor="#ffffff" stopOpacity="0.45" />
         </linearGradient>
         <radialGradient id={`glow-${id}`} cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#f2a93b" stopOpacity="0.45" />
-          <stop offset="1" stopColor="#f2a93b" stopOpacity="0" />
+          <stop offset="0" stopColor="#d19747" stopOpacity="0.45" />
+          <stop offset="1" stopColor="#d19747" stopOpacity="0" />
         </radialGradient>
         <linearGradient id={`flame-${id}`} x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0" stopColor="#e07b1a" />
-          <stop offset="0.5" stopColor="#f2a93b" />
+          <stop offset="0" stopColor="#c4812a" />
+          <stop offset="0.5" stopColor="#d19747" />
           <stop offset="1" stopColor="#ffe08a" />
         </linearGradient>
       </defs>
 
       {/* bóng đổ */}
-      <ellipse cx="100" cy="226" rx="66" ry="8" fill="#2e3a22" opacity="0.12" />
+      <ellipse cx="100" cy="226" rx="66" ry="8" fill="#1b4026" opacity="0.12" />
 
       {lit && <circle cx="100" cy="44" r="46" fill={`url(#glow-${id})`} />}
 
       {/* thân hũ thuỷ tinh */}
-      <rect x="38" y="70" width="124" height="152" rx="20" fill="#f6efdc" stroke="#d9cfb2" strokeWidth="2" />
+      <rect x="38" y="70" width="124" height="152" rx="20" fill="#f3e8d7" stroke="#e9d7bc" strokeWidth="2" />
       {/* sáp */}
       <rect x="44" y="92" width="112" height="124" rx="15" fill={product.wax} />
       <ellipse cx="100" cy="93" rx="56" ry="8" fill={product.wax} stroke="#00000010" />
       <ellipse cx="100" cy="93" rx="44" ry="5" fill="#ffffff" opacity="0.35" />
 
       {/* nhãn */}
-      <rect x="54" y="132" width="92" height="58" rx="8" fill="#fffcf3" stroke={product.accent} strokeWidth="2" />
+      <rect x="54" y="132" width="92" height="58" rx="8" fill="#fdfbf7" stroke={product.accent} strokeWidth="2" />
       <path
         d="M70 152 C 70 142, 80 138, 86 140 C 84 148, 78 154, 70 152 Z"
         fill={product.accent}
       />
-      <path d="M86 140 C 92 136, 98 142, 94 150 C 90 152, 86 148, 86 140 Z" fill="#548333" opacity="0.8" />
-      <text x="116" y="152" textAnchor="middle" fontFamily="var(--font-body)" fontWeight="800" fontSize="15" fill="#548333" letterSpacing="1">
+      <path d="M86 140 C 92 136, 98 142, 94 150 C 90 152, 86 148, 86 140 Z" fill="#2f6c40" opacity="0.8" />
+      <text x="116" y="152" textAnchor="middle" fontFamily="var(--font-body)" fontWeight="800" fontSize="15" fill="#2f6c40" letterSpacing="1">
         LUVIA
       </text>
       <line x1="64" y1="162" x2="136" y2="162" stroke={product.accent} strokeOpacity="0.4" />
-      <text x="100" y="179" textAnchor="middle" fontFamily="var(--font-body)" fontWeight="600" fontSize="10.5" fill="#2e3a22">
+      <text x="100" y="179" textAnchor="middle" fontFamily="var(--font-body)" fontWeight="600" fontSize="10.5" fill="#1b4026">
         {product.name.length > 18 ? product.name.slice(0, 17) + "…" : product.name}
       </text>
 

@@ -162,7 +162,7 @@ const seasonBase = (id: SeasonId) => ({
 export const SEASONS: Season[] = [
   {
     ...seasonBase("xuan"),
-    color: { primary: "#8DB560", soft: "#EEF5E3", wax: "#F4F6DF" },
+    color: { primary: "#5fa874", soft: "#e5f6e8", wax: "#f0f8ec" },
     highlights: [
       "Hương thơm tươi mát, sảng khoái và tràn đầy sức sống của buổi sáng sớm.",
       ...SHARED_HIGHLIGHTS,
@@ -176,7 +176,7 @@ export const SEASONS: Season[] = [
   },
   {
     ...seasonBase("ha"),
-    color: { primary: "#F2A93B", soft: "#FDF0D8", wax: "#FFF1D6" },
+    color: { primary: "#d19747", soft: "#faf5ed", wax: "#f3e8d7" },
     highlights: [
       "Hương hoa sen thanh tao, dịu nhẹ, mang lại cảm giác bình yên, thư thái.",
       ...SHARED_HIGHLIGHTS,

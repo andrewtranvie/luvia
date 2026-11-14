@@ -22,7 +22,7 @@ export default function GiftsPage() {
           {/* Quà tặng cá nhân */}
           <div className="flex flex-col justify-between rounded-clay-xl bg-surface-container-lowest p-space-lg clay-raise sm:p-space-xl">
             <div>
-              <h2 className="text-headline-md text-on-surface">{GIFTS.title}</h2>
+              <h2 className="font-serif text-headline-md text-on-surface">{GIFTS.title}</h2>
               <p className="mt-space-sm text-body-md text-on-surface-variant">{GIFTS.body}</p>
             </div>
 
@@ -47,14 +47,14 @@ export default function GiftsPage() {
           {/* Hợp tác doanh nghiệp */}
           <div
             id={GIFTS.b2b.id}
-            className="flex flex-col justify-between rounded-clay-xl bg-inverse-surface p-space-lg text-inverse-on-surface shadow-[0_16px_36px_-8px_rgba(40,52,28,0.3)] sm:p-space-xl"
+            className="flex flex-col justify-between rounded-clay-xl bg-inverse-surface p-space-lg text-inverse-on-surface shadow-[0_16px_36px_-8px_rgba(37,85,51,0.3)] sm:p-space-xl"
           >
             <div>
               <span className="inline-flex items-center gap-space-xs rounded-full bg-white/10 px-space-sm py-1 text-label-sm font-bold">
                 <Icon name="corporate_fare" className="text-[16px]" />
                 {GIFTS.b2b.eyebrow}
               </span>
-              <h2 className="mt-space-sm text-headline-md">{GIFTS.b2b.title}</h2>
+              <h2 className="font-serif mt-space-sm text-headline-md">{GIFTS.b2b.title}</h2>
               <p className="mt-space-sm text-body-md text-inverse-on-surface/80">{GIFTS.b2b.body}</p>
             </div>
           </div>

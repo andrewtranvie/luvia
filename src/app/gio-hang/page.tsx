@@ -16,8 +16,8 @@ const look = (seasonId: string | null, title: string, key: string) => {
   return {
     slug: key,
     name: season ? SEASON_COPY[season.id].name : title,
-    wax: season?.color.wax ?? "#F6EFDC",
-    accent: season?.color.primary ?? "#8DB560",
+    wax: season?.color.wax ?? "#f3e8d7",
+    accent: season?.color.primary ?? "#5fa874",
   };
 };
 

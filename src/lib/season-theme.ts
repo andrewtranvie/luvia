@@ -13,14 +13,14 @@ export const SEASON_THEME: Record<
     mood: "text-primary",
     glow: "bg-primary-fixed-dim/40",
     button:
-      "bg-primary-container text-on-primary shadow-[inset_0_2px_3px_rgba(255,255,255,0.4),0_6px_16px_rgba(84,131,51,0.25)] hover:bg-primary",
+      "bg-primary-container text-on-primary shadow-[inset_0_2px_3px_rgba(255,255,255,0.4),0_6px_16px_rgba(47,108,64,0.25)] hover:bg-primary",
   },
   ha: {
     chip: "bg-secondary-fixed text-on-secondary-fixed",
     mood: "text-secondary",
     glow: "bg-secondary-container/40",
     button:
-      "bg-secondary-container text-on-secondary-container shadow-[inset_0_2px_3px_rgba(255,255,255,0.5),0_6px_16px_rgba(242,169,59,0.3)] hover:opacity-95",
+      "bg-secondary-container text-on-secondary-container shadow-[inset_0_2px_3px_rgba(255,255,255,0.5),0_6px_16px_rgba(209,151,71,0.3)] hover:opacity-95",
   },
   thu: {
     chip: "bg-tertiary-fixed text-on-tertiary-fixed",
@@ -34,6 +34,6 @@ export const SEASON_THEME: Record<
     mood: "text-on-surface-variant",
     glow: "bg-outline-variant/30",
     button:
-      "bg-inverse-surface text-inverse-on-surface shadow-[inset_0_2px_3px_rgba(255,255,255,0.15),0_6px_16px_rgba(40,52,28,0.25)] hover:opacity-95",
+      "bg-inverse-surface text-inverse-on-surface shadow-[inset_0_2px_3px_rgba(255,255,255,0.15),0_6px_16px_rgba(37,85,51,0.25)] hover:opacity-95",
   },
 };

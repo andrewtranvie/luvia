@@ -35,11 +35,11 @@ export default function Header() {
     return path !== "/" && path !== "" && pathname.startsWith(path);
   };
 
-  // bg-surface = đúng màu nền trang: ở đầu trang không lộ dải nào, nhưng khi cuộn thì
-  // nội dung bị che hẳn thay vì xuyên qua khoảng trống quanh viên thuốc điều hướng.
+  // Header trong suốt để không lộ vệt chữ nhật cắt ngang nền gradient .page-aura;
+  // viên thuốc điều hướng bên trong đã có clay-raise + backdrop-blur nên vẫn nổi khối.
   return (
-    <header className="sticky top-0 z-50 bg-surface">
-      <div className="flex items-center justify-center gap-space-sm bg-surface-container px-margin-mobile py-space-xs text-center text-label-sm text-on-surface-variant shadow-[0_1px_4px_rgba(46,58,34,0.04)] sm:px-margin">
+    <header className="sticky top-0 z-50 bg-transparent">
+      <div className="flex items-center justify-center gap-space-sm bg-surface-container px-margin-mobile py-space-xs text-center text-label-sm text-on-surface-variant shadow-[0_1px_4px_rgba(27,64,38,0.04)] sm:px-margin">
         <span className="size-2 shrink-0 animate-pulse rounded-full bg-secondary-container" />
         <span>{NAV.announcement}</span>
       </div>
@@ -91,7 +91,7 @@ export default function Header() {
             >
               <Icon name="shopping_bag" className="text-[20px]" />
               {count > 0 && (
-                <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-secondary-container text-label-sm font-bold text-on-secondary-container shadow-[0_2px_6px_rgba(242,169,59,0.4)]">
+                <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-secondary-container text-label-sm font-bold text-on-secondary-container shadow-[0_2px_6px_rgba(209,151,71,0.4)]">
                   {count}
                 </span>
               )}

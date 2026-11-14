@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Patrick_Hand } from "next/font/google";
+import { Plus_Jakarta_Sans, Patrick_Hand, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ShopCartProvider } from "@/lib/shop-cart";
 import { ThemeProvider } from "@/lib/themeContext";
@@ -22,6 +22,18 @@ const hand = Patrick_Hand({
   weight: "400",
 });
 
+/* Tiêu đề lớn dùng Playfair Display — font-serif trong bản thiết kế Stitch.
+   Trong ảnh Stitch gửi kèm, dấu tiếng Việt ở 3 tiêu đề serif bị vỡ ("Chê´ tác"),
+   nhưng đã render thử tại /thu-phong và phông hoàn toàn bình thường ⇒ lỗi của
+   trình xem trước Stitch, không phải của phông. Chỉ nạp 600/700 vì serif chỉ
+   dùng cho tiêu đề. */
+const display = Playfair_Display({
+  variable: "--font-display",
+  subsets: ["latin", "vietnamese"],
+  weight: ["600", "700"],
+  style: ["normal", "italic"],
+});
+
 export const metadata: Metadata = {
   /* Thiếu metadataBase thì Next sinh ảnh og:image dạng đường dẫn tương đối
      ("/brand/og-cover.jpg"), mà Facebook/Zalo bắt buộc URL tuyệt đối → share link
@@ -42,6 +54,11 @@ export const metadata: Metadata = {
     siteName: SITE.name,
   },
 };
+
+/* Màu thanh địa chỉ trên Chrome Android — thiếu dòng này thì trang xanh bạc hà
+   mà thanh trên cùng vẫn trắng/xám mặc định. Phải khớp .page-aura ở globals.css. */
+export const viewport = { themeColor: "#eef6ea" };
+
 // Favicon / app icon: dùng quy ước file của Next (src/app/favicon.ico, icon.png, apple-icon.png)
 // sinh từ logo chính thức trong public/brand/logo-icon.png.
 
@@ -51,7 +68,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi" data-style="clay3d" className={`${body.variable} ${hand.variable} h-full antialiased`}>
+    <html
+      lang="vi"
+      data-style="clay3d"
+      className={`${body.variable} ${hand.variable} ${display.variable} h-full antialiased`}
+    >
       <head>
         {/* Icon font của bản thiết kế Stitch */}
         <link
@@ -59,7 +80,11 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="flex min-h-full flex-col bg-surface font-sans text-body-md text-on-surface">
+      <body className="flex min-h-full flex-col font-sans text-body-md text-on-surface">
+        {/* Nền 3 vầng sáng của bản thiết kế Stitch. Để thành một lớp fixed riêng thay vì
+            background-attachment:fixed trên body — thuộc tính đó buộc Safari iOS vẽ lại
+            cả chiều cao tài liệu mỗi khung hình và nhảy khi thanh địa chỉ co lại. */}
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 page-aura" />
         <ShopCartProvider>
           <ThemeProvider>
             <Header />

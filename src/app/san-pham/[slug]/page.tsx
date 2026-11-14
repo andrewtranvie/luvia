@@ -49,7 +49,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       {/* Câu hỏi thường gặp liên quan tới sản phẩm */}
       <section className="mt-20">
-        <h2 className="text-2xl font-extrabold text-ink">Trước khi chọn, bạn có thể muốn biết</h2>
+        <h2 className="font-serif text-2xl font-bold text-ink">Trước khi chọn, bạn có thể muốn biết</h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {FAQ.items
             .filter((item) => ["faq-nguyen-lieu", "faq-chon-mua", "faq-giao-hang", "faq-van-de"].includes(item.id))
@@ -67,7 +67,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       {/* Các mùa khác */}
       <section className="mt-20">
-        <h2 className="text-2xl font-extrabold text-ink">{COLLECTION.title}</h2>
+        <h2 className="font-serif text-2xl font-bold text-ink">{COLLECTION.title}</h2>
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {others.map((s) => (
             <SeasonCard key={s.id} season={s} />

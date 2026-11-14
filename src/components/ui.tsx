@@ -17,7 +17,7 @@ export function SectionTitle({
   return (
     <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
       <span className="brush-tag text-lg">{tag}</span>
-      <h2 className="mt-4 text-3xl font-extrabold leading-tight text-ink sm:text-4xl">{title}</h2>
+      <h2 className="mt-4 font-serif text-3xl font-bold leading-tight text-ink sm:text-4xl">{title}</h2>
       {desc && <p className="mt-3 text-ink-soft sm:text-lg">{desc}</p>}
     </div>
   );

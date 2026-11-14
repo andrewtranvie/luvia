@@ -21,7 +21,7 @@ export default function HomePage() {
 
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-space-xl lg:grid-cols-12">
           <div className="flex flex-col gap-space-md lg:col-span-6">
-            <div className="inline-flex w-fit items-center gap-space-xs self-start rounded-full bg-surface-container-high px-space-md py-space-xs text-primary shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8),0_2px_8px_rgba(46,58,34,0.05)]">
+            <div className="inline-flex w-fit items-center gap-space-xs self-start rounded-full bg-surface-container-high px-space-md py-space-xs text-primary shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8),0_2px_8px_rgba(27,64,38,0.05)]">
               <Icon name="spa" className="text-[16px] text-primary" fill />
               <span className="text-label-md font-bold uppercase tracking-wider text-on-surface">
                 {HERO.eyebrow}
@@ -48,7 +48,7 @@ export default function HomePage() {
               </Link>
               <Link
                 href={HERO.secondary.href}
-                className="inline-flex items-center justify-center rounded-full bg-surface-container-lowest px-space-lg py-space-md text-label-lg text-on-surface shadow-[inset_2px_2px_4px_rgba(255,255,255,0.9),0_6px_16px_rgba(46,58,34,0.06)] transition-all hover:scale-[1.02] hover:bg-surface-container active:translate-y-0.5"
+                className="inline-flex items-center justify-center rounded-full bg-surface-container-lowest px-space-lg py-space-md text-label-lg text-on-surface shadow-[inset_2px_2px_4px_rgba(255,255,255,0.9),0_6px_16px_rgba(27,64,38,0.06)] transition-all hover:scale-[1.02] hover:bg-surface-container active:translate-y-0.5"
               >
                 <Icon name="tune" className="mr-2 text-[20px] text-secondary" />
                 {HERO.secondary.label}
@@ -76,7 +76,7 @@ export default function HomePage() {
           {/* Khối 4 bệ mùa */}
           <div className="relative flex items-center justify-center lg:col-span-6">
             <div className="relative flex aspect-square w-full max-w-lg items-center justify-center p-space-md">
-              <div className="absolute inset-4 rounded-clay-xl bg-surface-container-lowest/60 shadow-[inset_2px_2px_6px_rgba(255,255,255,0.9),0_18px_40px_-10px_rgba(46,58,34,0.1)] backdrop-blur-md" />
+              <div className="absolute inset-4 rounded-clay-xl bg-surface-container-lowest/60 shadow-[inset_2px_2px_6px_rgba(255,255,255,0.9),0_18px_40px_-10px_rgba(27,64,38,0.1)] backdrop-blur-md" />
               <div className="relative z-10 grid h-full w-full grid-cols-2 gap-space-md p-space-sm">
                 {SEASONS.map((season) => {
                   const theme = SEASON_THEME[season.id];
@@ -85,7 +85,7 @@ export default function HomePage() {
                     <Link
                       key={season.id}
                       href={`/san-pham/${season.id}`}
-                      className="relative flex flex-col items-center justify-between rounded-clay-lg bg-surface-container/70 p-space-sm shadow-[inset_1px_1px_3px_rgba(255,255,255,0.8),0_8px_16px_rgba(141,181,96,0.18)] transition-all duration-300 hover:-translate-y-1 sm:p-space-md"
+                      className="relative flex flex-col items-center justify-between rounded-clay-lg bg-surface-container/70 p-space-sm shadow-[inset_1px_1px_3px_rgba(255,255,255,0.8),0_8px_16px_rgba(95,168,116,0.18)] transition-all duration-300 hover:-translate-y-1 sm:p-space-md"
                     >
                       <span
                         className={`self-start rounded-full px-space-sm py-0.5 text-[11px] font-bold uppercase tracking-wider ${theme.chip}`}
@@ -123,7 +123,7 @@ export default function HomePage() {
 
       {/* ---------------- BĂNG CHUYỆN MASCOT LUMI ---------------- */}
       <section className="w-full px-margin-mobile py-space-lg sm:px-margin">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-clay-xl bg-surface-container p-space-lg shadow-[inset_2px_2px_4px_rgba(255,255,255,0.9),0_12px_24px_rgba(46,58,34,0.06)]">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-clay-xl bg-surface-container p-space-lg shadow-[inset_2px_2px_4px_rgba(255,255,255,0.9),0_12px_24px_rgba(27,64,38,0.06)]">
           <div className="pointer-events-none absolute -bottom-10 -right-10 size-72 rounded-full bg-secondary-fixed/40 blur-3xl" />
           {/* Bỏ ảnh bên trái → khối chữ chiếm trọn bề ngang, căn giữa cho cân đối */}
           <div className="relative z-10 flex flex-col items-center gap-space-sm text-center">
@@ -164,7 +164,7 @@ export default function HomePage() {
 
             <Link
               href="/tu-van"
-              className="mt-space-sm inline-flex items-center gap-space-xs rounded-full bg-secondary-container px-space-lg py-space-sm text-label-md text-on-secondary-container shadow-[inset_0_2px_3px_rgba(255,255,255,0.5),0_6px_16px_rgba(242,169,59,0.3)] transition hover:opacity-95"
+              className="mt-space-sm inline-flex items-center gap-space-xs rounded-full bg-secondary-container px-space-lg py-space-sm text-label-md text-on-secondary-container shadow-[inset_0_2px_3px_rgba(255,255,255,0.5),0_6px_16px_rgba(209,151,71,0.3)] transition hover:opacity-95"
             >
               <Icon name="forum" className="text-[18px]" />
               {MASCOT_BANNER.cta}
@@ -191,7 +191,7 @@ export default function HomePage() {
             <span className="text-label-md font-bold uppercase tracking-widest text-primary">
               HÀNH TRÌNH TÁI SINH
             </span>
-            <h2 className="mt-space-xs text-headline-lg-mobile text-on-surface sm:text-headline-lg">
+            <h2 className="font-serif mt-space-xs text-headline-lg-mobile text-on-surface sm:text-headline-lg">
               {STORY.title}
             </h2>
             <div className="mt-space-md flex flex-col gap-space-sm text-body-md text-on-surface-variant">
@@ -217,7 +217,7 @@ export default function HomePage() {
             <span className="text-label-md font-bold uppercase tracking-widest text-primary">
               GIẢI ĐÁP THẮC MẮC
             </span>
-            <h2 className="mt-space-xs text-headline-lg-mobile text-on-surface sm:text-headline-lg">
+            <h2 className="font-serif mt-space-xs text-headline-lg-mobile text-on-surface sm:text-headline-lg">
               {FAQ.title}
             </h2>
           </div>

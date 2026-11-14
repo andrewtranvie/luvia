@@ -91,7 +91,7 @@ function Description({ season }: { season: Season }) {
   const copy = SEASON_COPY[season.id];
   return (
     <>
-      <h2 className="text-2xl font-extrabold text-ink">{copy.headline}</h2>
+      <h2 className="font-serif text-2xl font-bold text-ink">{copy.headline}</h2>
       <p className="mt-3 text-sm leading-relaxed text-ink-soft">{copy.description}</p>
       <p className="mt-2 text-sm leading-relaxed text-leaf-dark">{copy.suggestion}</p>
 
@@ -131,7 +131,7 @@ function Description({ season }: { season: Season }) {
 function Care() {
   return (
     <>
-      <h2 className="text-2xl font-extrabold text-ink">{CANDLE_CARE.title}</h2>
+      <h2 className="font-serif text-2xl font-bold text-ink">{CANDLE_CARE.title}</h2>
       {CANDLE_CARE.groups.map((g) => (
         <div key={g.id}>
           <Heading>{g.title}</Heading>

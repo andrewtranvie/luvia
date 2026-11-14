@@ -94,7 +94,7 @@ export default function StoryPage() {
               <div className="grid size-14 place-items-center rounded-2xl bg-flame-soft text-flame-dark">
                 <v.icon className="size-7" />
               </div>
-              <h3 className="mt-5 text-2xl font-extrabold">{v.title}</h3>
+              <h3 className="font-serif mt-5 text-2xl font-bold">{v.title}</h3>
               <p className="mt-3 leading-relaxed text-ink-soft">{v.text}</p>
             </div>
           ))}
