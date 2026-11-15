@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { VARIANTS, type Season } from "@/lib/catalog";
 import { DEMO_PRODUCT, DEMO_RATING, DEMO_REVIEW_COUNT } from "@/content/demo-san-pham";
 import { CANDLE_CARE, CANDLE_STORAGE, COLLECTION, PRODUCT_PAGE, SEASON_COPY, fill } from "@/content/vi";
@@ -13,6 +13,19 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
 export default function ProductTabs({ season }: { season: Season }) {
   const [tab, setTab] = useState<Tab>("desc");
   const tablist = useRef<HTMLDivElement>(null);
+
+  // Link "{số} đánh giá" ở đầu trang trỏ tới #danh-gia. Trước đây nó cuộn đúng chỗ
+  // nhưng vẫn để tab "Mô tả sản phẩm" mở, người bấm không thấy đánh giá đâu.
+  // Bắt cả hai đường: mở thẳng bằng link dán (lúc mount) và bấm khi đã ở trong trang
+  // (hashchange — đổi hash giống nhau thì React không render lại).
+  useEffect(() => {
+    const moTabDanhGia = () => {
+      if (window.location.hash === "#danh-gia") setTab("reviews");
+    };
+    moTabDanhGia();
+    window.addEventListener("hashchange", moTabDanhGia);
+    return () => window.removeEventListener("hashchange", moTabDanhGia);
+  }, []);
 
   // Chuẩn WAI-ARIA: đi giữa các tab bằng ←/→, Home/End
   const onKey = (e: React.KeyboardEvent) => {

@@ -197,6 +197,12 @@
 
 html {
   scroll-behavior: smooth;
+  /* Chừa chỗ cho header dính (24px thanh thông báo + 80px thanh điều hướng = 104px)
+     cộng 8px thở. Thiếu dòng này thì mọi cú nhảy tới #faq, #danh-gia, #quy-trinh...
+     đều dừng ngay mép trên, để header đè kín tiêu đề của mục vừa tới.
+     Đặt ở html thay vì scroll-mt từng mục để ăn cho cả link dán thẳng vào thanh
+     địa chỉ và cả lúc trình duyệt khôi phục vị trí cuộn. */
+  scroll-padding-top: 7rem;
   /* Nền dự phòng — body trong suốt để lộ lớp .page-aura, lúc chưa vẽ xong tránh lóe trắng */
   background: var(--color-surface);
 }
@@ -624,6 +630,9 @@ html[data-style="clay3d"] .pebble-badge {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    /* Thiếu dòng này thì transition vẫn chạy đủ tốc độ dù người dùng đã tắt
+       hiệu ứng trong cài đặt hệ điều hành — khối đóng/mở câu hỏi là ví dụ. */
+    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }

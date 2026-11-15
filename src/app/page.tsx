@@ -253,6 +253,8 @@ export default function HomePage() {
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpen ? null : item.id)}
+                    aria-expanded={isOpen}
+                    aria-controls={`${item.id}-noi-dung`}
                     className="flex w-full items-center justify-between gap-space-md p-space-md text-left text-label-lg text-on-surface transition hover:text-primary"
                   >
                     <span>{item.q}</span>
@@ -263,11 +265,23 @@ export default function HomePage() {
                       }`}
                     />
                   </button>
-                  {isOpen && (
-                    <div className="border-t border-surface-container px-space-md pb-space-md pt-space-sm text-body-md text-on-surface-variant">
-                      {item.a}
+                  {/* Trước đây câu trả lời bị gắn/gỡ thẳng khỏi DOM nên hiện ra giật cục,
+                      lệch hẳn với mũi tên vốn xoay mượt 200ms. Thủ thuật grid 0fr→1fr là
+                      cách duy nhất chuyển mượt tới chiều cao tự động mà không phải đo DOM
+                      bằng JS. Đóng lại thì inert để trình đọc màn hình bỏ qua. */}
+                  <div
+                    id={`${item.id}-noi-dung`}
+                    inert={!isOpen}
+                    className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+                      isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="border-t border-surface-container px-space-md pb-space-md pt-space-sm text-body-md text-on-surface-variant">
+                        {item.a}
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               );
             })}

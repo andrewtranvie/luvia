@@ -102,7 +102,9 @@ export default function StoryPage() {
       </section>
 
       {/* QUY TRÌNH */}
-      <section id="quy-trinh" className="mx-auto max-w-6xl scroll-mt-32 px-4 py-24 sm:px-6">
+      {/* Bỏ scroll-mt-32: scroll-padding-top ở html đã chừa chỗ cho header dính,
+          để cả hai thì cộng dồn thành 240px, mục này tụt hẳn xuống giữa màn. */}
+      <section id="quy-trinh" className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
         <SectionTitle
           center
           tag="Quy trình"
