@@ -143,7 +143,6 @@ export default function Footer() {
               <div>
                 <p className="text-[11px] text-white/60">{FOOTER.addressLabel}:</p>
                 <p className="leading-relaxed text-white/85">{SITE.address}</p>
-                <p className="mt-1 text-[10px] text-white/50 italic">(Địa chỉ theo hồ sơ dự án)</p>
               </div>
             </li>
           </ul>
