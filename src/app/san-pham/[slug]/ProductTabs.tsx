@@ -14,13 +14,31 @@ export default function ProductTabs({ season }: { season: Season }) {
   const [tab, setTab] = useState<Tab>("desc");
   const tablist = useRef<HTMLDivElement>(null);
 
+  // Màn hẹp không đủ chỗ cho cả ba tab nên dải tab cuộn ngang được. Tab mở bằng
+  // code (không phải do người dùng bấm) có thể đang nằm khuất ngoài mép, nội dung
+  // đổi mà dải tab vẫn đứng yên nên không biết mình đang ở tab nào.
+  // Tự tính scrollLeft chứ không dùng scrollIntoView: hàm đó kéo cả trang theo chiều
+  // dọc, đá nhau với cú cuộn tới #danh-gia đang chạy cùng lúc. scrollBy chỉ động vào
+  // dải tab. Không truyền behavior để lấy theo scroll-smooth của CSS — nhờ vậy ai tắt
+  // hiệu ứng trong cài đặt máy thì quy tắc prefers-reduced-motion tự ngắt luôn.
+  const keoTabVaoKhung = (t: Tab) => {
+    const list = tablist.current;
+    const btn = list?.querySelector<HTMLElement>(`[data-tab="${t}"]`);
+    if (!list || !btn) return;
+    const lr = list.getBoundingClientRect();
+    const br = btn.getBoundingClientRect();
+    list.scrollBy({ left: br.left - lr.left - (lr.width - br.width) / 2 });
+  };
+
   // Link "{số} đánh giá" ở đầu trang trỏ tới #danh-gia. Trước đây nó cuộn đúng chỗ
   // nhưng vẫn để tab "Mô tả sản phẩm" mở, người bấm không thấy đánh giá đâu.
   // Bắt cả hai đường: mở thẳng bằng link dán (lúc mount) và bấm khi đã ở trong trang
   // (hashchange — đổi hash giống nhau thì React không render lại).
   useEffect(() => {
     const moTabDanhGia = () => {
-      if (window.location.hash === "#danh-gia") setTab("reviews");
+      if (window.location.hash !== "#danh-gia") return;
+      setTab("reviews");
+      keoTabVaoKhung("reviews");
     };
     moTabDanhGia();
     window.addEventListener("hashchange", moTabDanhGia);
@@ -41,7 +59,7 @@ export default function ProductTabs({ season }: { season: Season }) {
 
   return (
     <section id="danh-gia" className="mt-16 overflow-hidden rounded-3xl bg-white ring-1 ring-leaf/10">
-      <div ref={tablist} role="tablist" aria-label={PRODUCT_PAGE.info.highlights} onKeyDown={onKey} className="flex overflow-x-auto border-b border-leaf/10">
+      <div ref={tablist} role="tablist" aria-label={PRODUCT_PAGE.info.highlights} onKeyDown={onKey} className="flex overflow-x-auto scroll-smooth border-b border-leaf/10">
         {TABS.map((t) => (
           <button
             key={t}
